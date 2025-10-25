@@ -13,7 +13,7 @@ import {
 
 const products = [
   {
-    image: 'https://images.unsplash.com/photo-1643350694071-52ff81b190d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHN1Z2FyJTIwY3ViZXN8ZW58MXx8fHwxNzYxMzEwNzU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: '/jaggery-solid-regular.jpg',
     name: 'Cube Jaggery',
     description: 'Perfect cubes of pure jaggery, ideal for daily use and traditional recipes.',
     price: '₹299/kg',
@@ -25,7 +25,7 @@ const products = [
     price: '₹349/kg',
   },
   {
-    image: 'https://images.unsplash.com/photo-1720806239088-14dc9ea57f52?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHBvd2RlciUyMHNwaWNlfGVufDF8fHx8MTc2MTMxMDc2MHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'jaggery-powder2.webp',
     name: 'Powder Jaggery',
     description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
     price: '₹279/kg',

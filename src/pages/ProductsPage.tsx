@@ -14,7 +14,7 @@ import {
 const allProducts = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1643350694071-52ff81b190d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHN1Z2FyJTIwY3ViZXN8ZW58MXx8fHwxNzYxMzEwNzU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: '/jaggery-solid-regular.jpg',
     name: 'Cube Jaggery - Premium',
     description: 'Perfect cubes of pure jaggery, ideal for daily use and traditional recipes.',
     price: '₹299/kg',
@@ -22,7 +22,7 @@ const allProducts = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1643350694071-52ff81b190d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHN1Z2FyJTIwY3ViZXN8ZW58MXx8fHwxNzYxMzEwNzU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'jaggery-cubes.jpg',
     name: 'Cube Jaggery - Regular',
     description: 'Traditional cube jaggery perfect for everyday cooking and beverages.',
     price: '₹249/kg',
@@ -38,7 +38,7 @@ const allProducts = [
   },
   {
     id: 4,
-    image: 'https://images.unsplash.com/photo-1671548185843-3f50c6c1060b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob25leSUyMGxpcXVpZCUyMGdvbGRlbnxlbnwxfHx8fDE3NjEzMTA3NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: '/natural-liquid-jaggery.jpg',
     name: 'Liquid Jaggery - Organic',
     description: 'Premium organic liquid jaggery with rich flavor and natural sweetness.',
     price: '₹399/kg',
@@ -46,7 +46,7 @@ const allProducts = [
   },
   {
     id: 5,
-    image: 'https://images.unsplash.com/photo-1720806239088-14dc9ea57f52?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHBvd2RlciUyMHNwaWNlfGVufDF8fHx8MTc2MTMxMDc2MHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'jaggery-powder.jpg',
     name: 'Powder Jaggery - Fine',
     description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
     price: '₹279/kg',
@@ -54,7 +54,7 @@ const allProducts = [
   },
   {
     id: 6,
-    image: 'https://images.unsplash.com/photo-1720806239088-14dc9ea57f52?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHBvd2RlciUyMHNwaWNlfGVufDF8fHx8MTc2MTMxMDc2MHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: '/jaggery-powder2.webp',
     name: 'Powder Jaggery - Coarse',
     description: 'Coarse powder perfect for traditional sweets and cooking.',
     price: '₹259/kg',
@@ -62,7 +62,7 @@ const allProducts = [
   },
   {
     id: 7,
-    image: 'https://images.unsplash.com/photo-1560961911-293cfd783727?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqYWdnZXJ5JTIwYmxvY2tzJTIwZ29sZGVufGVufDF8fHx8MTc2MTMxMDc1OHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'jaggery-block.jpg',
     name: 'Block Jaggery - Large',
     description: 'Traditional large blocks ideal for festivals and special occasions.',
     price: '₹329/kg',
@@ -70,7 +70,7 @@ const allProducts = [
   },
   {
     id: 8,
-    image: 'https://images.unsplash.com/photo-1560961911-293cfd783727?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqYWdnZXJ5JTIwYmxvY2tzJTIwZ29sZGVufGVufDF8fHx8MTc2MTMxMDc1OHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'jaggery-block1.jpg',
     name: 'Block Jaggery - Mini',
     description: 'Convenient mini blocks perfect for portion control and gifting.',
     price: '₹289/kg',
@@ -78,7 +78,7 @@ const allProducts = [
   },
   {
     id: 9,
-    image: 'https://images.unsplash.com/photo-1720806239088-14dc9ea57f52?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHBvd2RlciUyMHNwaWNlfGVufDF8fHx8MTc2MTMxMDc2MHww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: 'jaggery-powder2.jpg',
     name: 'Powder Jaggery - Organic',
     description: 'Premium organic powder jaggery with certified purity.',
     price: '₹319/kg',

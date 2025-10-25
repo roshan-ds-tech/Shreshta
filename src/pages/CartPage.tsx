@@ -18,14 +18,14 @@ export function CartPage() {
     {
       id: 1,
       name: 'Cube Jaggery - Premium',
-      image: 'https://images.unsplash.com/photo-1643350694071-52ff81b190d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxicm93biUyMHN1Z2FyJTIwY3ViZXN8ZW58MXx8fHwxNzYxMzEwNzU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'jaggery-solid-regular.jpg',
       price: 299,
       quantity: 2,
     },
     {
       id: 2,
       name: 'Liquid Jaggery - Pure',
-      image: 'https://images.unsplash.com/photo-1671548185843-3f50c6c1060b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob25leSUyMGxpcXVpZCUyMGdvbGRlbnxlbnwxfHx8fDE3NjEzMTA3NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'natural-liquid-jaggery.jpg',
       price: 349,
       quantity: 1,
     },

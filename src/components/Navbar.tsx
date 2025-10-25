@@ -18,16 +18,14 @@ export function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#2C1810]/95 backdrop-blur-md border-b border-[#C5A572]/20">
+    <nav className="sticky top-0 z-50 bg-[#2C1810]/95 backdrop-blur-md border-b border-[#C5A572]/20" >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="flex items-center">
-              <img src="/logo.png" alt="logo" className="h-[16px] w-auto" />
-              <span className="ml-2 text-xl text-[#FFF8E7] font-serif tracking-wider">
-                PureGur
-              </span>
+              <img src="/logo.png" alt="logo" className='h-24' />
+
             </div>
           </Link>
 

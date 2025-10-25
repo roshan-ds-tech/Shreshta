@@ -226,7 +226,6 @@
 
   img, video {
     max-width: 100%;
-    height: auto;
   }
 
   button, input, select, optgroup, textarea {
@@ -1027,6 +1026,14 @@
 
   .rounded-2xl {
     border-radius: var(--radius-2xl);
+  }
+
+  .rounded-3xl {
+    border-radius: var(--radius-3xl);
+  }
+
+  .rounded-4xl {
+    border-radius: var(--radius-4xl);
   }
 
   .rounded-full {
