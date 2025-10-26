@@ -84,6 +84,70 @@ const allProducts = [
     price: '₹319/kg',
     category: 'powder',
   },
+  {
+    id: 10,
+    image: 'ghee.avif',
+    name: 'Cow Ghee - Organic',
+    description: 'Premium organic Cow Ghee with certified purity.',
+    price: '₹5099/L',
+    category: 'dairy',
+  },
+  {
+    id: 11,
+    image: 'butter.webp',
+    name: 'Pure Butter  - Organic',
+    description: 'Premium organic Pure Butter with certified purity.',
+    price: '₹669/Kg',
+    category: 'dairy',
+  },
+   {
+    id: 12,
+    image: 'coffee.jpg',
+    name: 'Single Origin Coffee',
+    description: 'Pure Single origin Coffee with rich aroma and flavor.',
+    price: '₹7000/Kg',
+    category: 'beverages',
+  },
+    {
+    id: 13,
+    image: 'tea.jpg',
+    name: 'Assam Black Tea',
+    description: 'Pure Assam Black Tea with strong flavor and aroma.',
+    price: '3499/Kg',
+    category: 'beverages',
+  },
+      {
+    id: 14,
+    image: 'green_tea.jpg',
+    name: 'Green Tea',
+    description: 'Pure Green Tea with refreshing taste and health benefits.',
+    price: '799/180g',
+    category: 'beverages',
+  },
+        {
+    id: 15,
+    image: 'sorghum-millet.jpg',
+    name: 'Sorghum Millet',
+    description: 'Healthy Sorghum Millet for nutritious meals.',
+    price: '899/kg',
+    category: 'millets',
+  },
+          {
+    id: 16,
+    image: 'FinerMillet.webp',
+    name: 'Finer Millet',
+    description: 'Nutritious Finer Millet for wholesome diets.',
+    price: '450/kg',
+    category: 'millets',
+  },
+            {
+    id: 17,
+    image: 'pearl-millet.jpg',
+    name: 'Pearl Millet',
+    description: 'Wholesome Pearl Millet for healthy living.',
+    price: '650/kg',
+    category: 'millets',
+  },
 ];
 
 export function ProductsPage() {
@@ -180,8 +244,46 @@ export function ProductsPage() {
                 >
                   Powder
                 </Button>
+
+                <Button
+                  variant={selectedCategory === 'dairy' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategory('dairy')}
+                  className={selectedCategory === 'dairy' 
+                    ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
+                    : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
+                  }
+                >
+                  Dairy
+                </Button>
+
+            <Button
+                  variant={selectedCategory === 'beverages' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategory('beverages')}
+                  className={selectedCategory === 'beverages' 
+                    ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
+                    : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
+                  }
+                >
+                  Beverages
+                </Button>
+
+            <Button
+                  variant={selectedCategory === 'millets' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategory('millets')}
+                  className={selectedCategory === 'millets' 
+                    ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
+                    : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
+                  }
+                >
+                  Millets
+                </Button>
               </div>
             </div>
+
+            
 
             {/* Sort Dropdown */}
             <div className="flex items-center gap-2">
