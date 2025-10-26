@@ -8,13 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
-            <div className="flex items-center">
-              <span className="text-2xl text-[#D4AF37] font-serif">✦</span>
-              <span className="ml-2 text-xl text-[#FFF8E7] font-serif tracking-wider">
-                PureGur
-              </span>
-            </div>
-            <p className="text-sm text-[#C5A572]">
+              <span className="flex items-center">
+              <img src="/logo_final.png" alt="logo" style={{height: '150px'}} />
+
+            </span>
+            <p className="text-sm text-[#C5A572]" style={{}}>
               Premium organic jaggery crafted with tradition. Pure, natural sweetness from farm to table.
             </p>
           </div>
@@ -83,7 +81,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-[#C5A572]/20 text-center">
           <p className="text-sm text-[#C5A572]">
-            © 2025 PureGur. All rights reserved. Crafted with tradition and love.
+            © 2025 Shreshta. All rights reserved. Crafted with tradition and love.
           </p>
         </div>
       </div>

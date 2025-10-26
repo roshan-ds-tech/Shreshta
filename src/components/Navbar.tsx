@@ -24,7 +24,7 @@ export function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="flex items-center">
-              <img src="/logo.png" alt="logo" className='h-24' />
+              <img src="/logo_final.png" alt="logo" className='h-24' style={{height: '110px'}}/>
 
             </div>
           </Link>

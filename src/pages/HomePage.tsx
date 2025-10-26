@@ -25,7 +25,7 @@ const products = [
     price: '₹349/kg',
   },
   {
-    image: 'jaggery-powder2.webp',
+    image: '/jaggery-powder2.webp',
     name: 'Powder Jaggery',
     description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
     price: '₹279/kg',
