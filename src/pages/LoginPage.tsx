@@ -1,20 +1,41 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Eye, EyeOff } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast'; 
 
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Login submitted:', { email, password });
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/accounts/login/", {
+      username: username, // if your backend uses "username", otherwise use email
+      password: password,
+    });
+
+    console.log("Login successful:", response.data);
+    toast.success("Login successful! 🎉");
+
+    // You can store user data or token in localStorage here
+    localStorage.setItem("user", JSON.stringify(response.data));
+
+          // ✅ Redirect to dashboard
+    setTimeout(() => navigate("/dashboard"), 1000); // <-- Redirect after success
+  } catch (error: any) {
+    console.error("Login failed:", error.response?.data || error.message);
+    toast.error(error.response?.data?.error || "Invalid credentials 😞"); // ✅ Toaster error
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8E7] via-[#F5E6D3] to-[#FFF8E7] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -27,10 +48,7 @@ export function LoginPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-3xl text-[#D4AF37] font-serif">✦</span>
-              <span className="ml-2 text-2xl text-[#2C1810] font-serif tracking-wider">
-                PureGur
-              </span>
+              <img src="/logo_final.png" alt="logo" className='h-64' style={{height: '160px'}}/>
             </div>
             <h2 className="text-2xl text-[#2C1810]">Welcome Back</h2>
             <p className="text-sm text-[#5C4033] mt-2">
@@ -41,15 +59,15 @@ export function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label htmlFor="email" className="text-[#2C1810]">
-                Email Address
+              <Label htmlFor="username" className="text-[#2C1810]">
+                User Name
               </Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                placeholder="Joh Doe"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
                 required
               />

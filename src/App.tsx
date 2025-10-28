@@ -10,8 +10,19 @@ import { CartPage } from './pages/CartPage';
 import { ContactPage } from './pages/ContactPage';
 import { FAQPage } from './pages/FAQPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import axios from 'axios';
+import { use, useEffect } from 'react';
+import DashboardPage from "./pages/DashboardPage";
+
 
 export default function App() {
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/accounts/signup/')
+    .then(res => console.log(res.data))
+    .catch(err => console.log(err));
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen bg-[#FFF8E7]">
@@ -25,6 +36,7 @@ export default function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FAQPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
         </Routes>
         <Footer />

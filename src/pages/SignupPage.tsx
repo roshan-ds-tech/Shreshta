@@ -5,6 +5,9 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,10 +20,33 @@ export function SignupPage() {
     confirmPassword: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Signup submitted:', formData);
-  };
+  const navigate = useNavigate();
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/accounts/signup/", {
+      username: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+    });
+
+    console.log("Signup success:", response.data);
+
+    toast.success('Signup successful! Redirecting to login...');
+    navigate('/login');
+  } catch (error: any) {
+    console.error("Signup error:", error.response?.data || error.message);
+    alert(error.response?.data?.error || "Signup failed!");
+  }
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -40,10 +66,8 @@ export function SignupPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-3xl text-[#D4AF37] font-serif">✦</span>
-              <span className="ml-2 text-2xl text-[#2C1810] font-serif tracking-wider">
-                PureGur
-              </span>
+              <img src="/logo_final.png" alt="logo" className='h-64' style={{height: '160px'}}/>
+              
             </div>
             <h2 className="text-2xl text-[#2C1810]">Create Your Account</h2>
             <p className="text-sm text-[#5C4033] mt-2">
