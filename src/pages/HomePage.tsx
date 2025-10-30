@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import { Button } from '../components/ui/button';
 import { ProductCard } from '../components/ProductCard';
+import { HoverVideoPlayer } from '../components/HoverVideoPlayer';
 import { Link } from 'react-router-dom';
-import { Leaf, Award, Heart, Truck, Star } from 'lucide-react';
+import { Leaf, Award, Heart, Truck, Star, ShoppingCart } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -26,6 +27,30 @@ const products = [
   },
   {
     image: '/jaggery-powder2.webp',
+    name: 'Powder Jaggery',
+    description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
+    price: '₹279/kg',
+  },
+];
+
+const premiumproducts = [
+  {
+    url: '/jaggery-cubes1 (online-video-cutter.com).mp4',
+    image: '/jaggery-cube1_video.jpeg',
+    name: 'Cube Jaggery',
+    description: 'Perfect cubes of pure jaggery, ideal for daily use and traditional recipes.',
+    price: '₹299/kg',
+  },
+  {
+    url: '/hover_video2 (online-video-cutter.com).mp4',
+    image: '/hoveer_image2.jpeg',
+    name: 'Liquid Jaggery',
+    description: 'Smooth, golden liquid jaggery perfect for drinks, desserts, and marinades.',
+    price: '₹349/kg',
+  },
+  {
+    url: '/hover_video3 (online-video-cutter.com).mp4',
+    image: '/hover_video3.jpeg',
     name: 'Powder Jaggery',
     description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
     price: '₹279/kg',
@@ -187,19 +212,40 @@ export function HomePage() {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {products.map((product, index) => (
-                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <ProductCard {...product} />
-                  </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+            {premiumproducts.map((premiumproduct, index) => (
+            <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <motion.div
+                // ... motion props ...
+                className="bg-[#FFF8E7] rounded-lg overflow-hidden shadow-lg border-2 border-[#C5A572]/20 hover:border-[#D4AF37]/50 flex flex-col" // Added flex flex-col here too for consistency
+              >
+                <HoverVideoPlayer
+                  videoSrc={premiumproduct.url}
+                  posterSrc={premiumproduct.image}
+                  // Apply container styles AND explicit height here
+                  className="h-52 md:h-64" // <-- HEIGHT MOVED HERE
+                  // videoClassName="h-52 md:h-64" // <-- REMOVED FROM HERE
+                />
+                {/* Product details */}
+                <div className="p-6 flex flex-col flex-grow"> {/* Added flex flex-col flex-grow */}
+                  <h3 className="text-[#2C1810] mb-2">{premiumproduct.name}</h3>
+                  <p className="text-sm text-[#5C4033] mb-4 line-clamp-2 flex-grow">{premiumproduct.description}</p> {/* Added flex-grow */}
+                  {premiumproduct.price && (
+                    <div className="flex items-center justify-between mt-auto"> {/* Added mt-auto */}
+                      <span className="text-[#D4AF37]">{premiumproduct.price}</span>
+                      <Button
+                        size="sm"
+                        className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </CarouselItem>
+          ))}
+          </CarouselContent>
             <CarouselPrevious className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#2C1810]" />
             <CarouselNext className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#2C1810]" />
           </Carousel>
