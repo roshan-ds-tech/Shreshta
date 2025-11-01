@@ -144,9 +144,10 @@ export function CartPage() {
                     </Button>
                   </div>
                 </div>
+                <br />
                 <Button
                   className="w-full mt-6 bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
-                  style={{ cursor: "pointer", whiteSpace: "nowrap" }}
+                  style={{ cursor: "pointer"}}
                 >
                   Proceed to Checkout
                 </Button>

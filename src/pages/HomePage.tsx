@@ -18,21 +18,21 @@ const products = [
     image: '/jaggery-solid-regular.jpg',
     name: 'Cube Jaggery',
     description: 'Perfect cubes of pure jaggery, ideal for daily use and traditional recipes.',
-    price: 299,
+    price: "299/kg",
   },
   {
     id: 2,
     image: 'https://images.unsplash.com/photo-1671548185843-3f50c6c1060b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob25leSUyMGxpcXVpZCUyMGdvbGRlbnxlbnwxfHx8fDE3NjEzMTA3NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
     name: 'Liquid Jaggery',
     description: 'Smooth, golden liquid jaggery perfect for drinks, desserts, and marinades.',
-    price: 349,
+    price: "349/L",
   },
   {
     id: 3,
     image: '/jaggery-powder2.webp',
     name: 'Powder Jaggery',
     description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
-    price: 279,
+    price: "279/kg",
   },
 ];
 
