@@ -259,60 +259,60 @@ export default function EcommerceDashboard(): JSX.Element {
         </div>
       ),
       children: (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AntCard className="p-4 shadow-none">
-            <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <AntCard className="p-4 sm:p-6 shadow-none">
+            <div className="space-y-3 sm:space-y-4">
               <div>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-medium">Personal Information</h3>
-                    <p className="text-sm text-[#5C4033]">Update name, email and phone</p>
+                    <h3 className="text-base sm:text-lg font-medium">Personal Information</h3>
+                    <p className="text-xs sm:text-sm text-[#5C4033]">Update name, email and phone</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm block mb-1">Full Name</label>
+                <label className="text-xs sm:text-sm block mb-1">Full Name</label>
                 <AntInput value={user.name} disabled={!isEditing} onChange={(e) => setUser({ ...user, name: e.target.value })} />
               </div>
 
               <div>
-                <label className="text-sm block mb-1">Email</label>
+                <label className="text-xs sm:text-sm block mb-1">Email</label>
                 <AntInput value={user.email} disabled={!isEditing} onChange={(e) => setUser({ ...user, email: e.target.value })} />
               </div>
 
               <div>
-                <label className="text-sm block mb-1">Phone</label>
+                <label className="text-xs sm:text-sm block mb-1">Phone</label>
                 <AntInput value={user.phone} disabled={!isEditing} onChange={(e) => setUser({ ...user, phone: e.target.value })} />
               </div>
 
               {isEditing && (
-                <div className="flex gap-2">
-                  <Button type="primary" onClick={handleSaveProfile}>
+                <div className="flex gap-2 flex-wrap">
+                  <Button type="primary" onClick={handleSaveProfile} size="middle">
                     <Save className="mr-2 w-4 h-4" />
                     Save
                   </Button>
-                  <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+                  <Button onClick={() => setIsEditing(false)} size="middle">Cancel</Button>
                 </div>
               )}
             </div>
           </AntCard>
 
-          <AntCard className="p-4 shadow-none">
+          <AntCard className="p-4 sm:p-6 shadow-none">
             <div>
-              <h3 className="text-lg font-medium">Recent Orders</h3>
-              <p className="text-sm text-[#5C4033]">Last 3 orders at a glance</p>
+              <h3 className="text-base sm:text-lg font-medium">Recent Orders</h3>
+              <p className="text-xs sm:text-sm text-[#5C4033]">Last 3 orders at a glance</p>
 
               <div className="space-y-3 mt-4">
                 {orders.slice(0, 3).map((o) => (
-                  <div key={o.id} className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">{o.product}</div>
-                      <div className="text-sm text-[#5C4033]">{o.date} • {o.id}</div>
+                  <div key={o.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                    <div className="flex-1">
+                      <div className="font-medium text-sm sm:text-base">{o.product}</div>
+                      <div className="text-xs sm:text-sm text-[#5C4033]">{o.date} • {o.id}</div>
                     </div>
-                    <div className="text-right">
-                      <div className="font-semibold">{o.total}</div>
-                      <div className="text-sm text-[#5C4033]">{o.status}</div>
+                    <div className="text-left sm:text-right flex-shrink-0">
+                      <div className="font-semibold text-sm sm:text-base">{o.total}</div>
+                      <div className="text-xs sm:text-sm text-[#5C4033]">{o.status}</div>
                     </div>
                   </div>
                 ))}
@@ -331,20 +331,20 @@ export default function EcommerceDashboard(): JSX.Element {
         </div>
       ),
       children: (
-        <AntCard className="p-4">
-          <h3 className="text-lg font-medium">All Orders</h3>
-          <p className="text-sm text-[#5C4033]">Track and view order details</p>
+        <AntCard className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-medium">All Orders</h3>
+          <p className="text-xs sm:text-sm text-[#5C4033]">Track and view order details</p>
 
           <div className="space-y-3 mt-4">
             {orders.map((o) => (
-              <div key={o.id} className="p-3 border rounded-lg flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{o.product}</div>
-                  <div className="text-sm text-[#5C4033]">{o.date} • {o.id}</div>
+              <div key={o.id} className="p-3 sm:p-4 border rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex-1">
+                  <div className="font-medium text-sm sm:text-base">{o.product}</div>
+                  <div className="text-xs sm:text-sm text-[#5C4033]">{o.date} • {o.id}</div>
                 </div>
-                <div className="text-right">
-                  <div className="font-semibold">{o.total}</div>
-                  <div className="text-sm text-[#5C4033]">{o.status}</div>
+                <div className="text-left sm:text-right flex-shrink-0">
+                  <div className="font-semibold text-sm sm:text-base">{o.total}</div>
+                  <div className="text-xs sm:text-sm text-[#5C4033]">{o.status}</div>
                 </div>
               </div>
             ))}
@@ -361,14 +361,14 @@ export default function EcommerceDashboard(): JSX.Element {
         </div>
       ),
       children: (
-        <AntCard className="p-4">
-          <div className="flex items-center justify-between">
+        <AntCard className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <h3 className="text-lg font-medium">Manage Addresses</h3>
-              <p className="text-sm text-[#5C4033]">Add, edit and set default delivery addresses</p>
+              <h3 className="text-base sm:text-lg font-medium">Manage Addresses</h3>
+              <p className="text-xs sm:text-sm text-[#5C4033]">Add, edit and set default delivery addresses</p>
             </div>
             <div>
-              <Button type="primary" onClick={openAddAddress} className="bg-[#D4AF37] text-[#2C1810]">
+              <Button type="primary" onClick={openAddAddress} className="bg-[#D4AF37] text-[#2C1810] w-full sm:w-auto">
                 <Plus className="mr-2 w-4 h-4" />
                 Add Address
               </Button>
@@ -377,53 +377,53 @@ export default function EcommerceDashboard(): JSX.Element {
 
           <div className="mt-4">
             {showAddressForm ? (
-              <form onSubmit={submitAddress} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-3">
+              <form onSubmit={submitAddress} className="space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm block mb-1">Label</label>
+                    <label className="text-xs sm:text-sm block mb-1">Label</label>
                     <AntInput value={addressForm.label} onChange={(e) => setAddressForm({ ...addressForm, label: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-sm block mb-1">Recipient</label>
+                    <label className="text-xs sm:text-sm block mb-1">Recipient</label>
                     <AntInput value={addressForm.recipient} onChange={(e) => setAddressForm({ ...addressForm, recipient: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-sm block mb-1">Phone</label>
+                    <label className="text-xs sm:text-sm block mb-1">Phone</label>
                     <AntInput value={addressForm.phone} onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-sm block mb-1">Pincode</label>
+                    <label className="text-xs sm:text-sm block mb-1">Pincode</label>
                     <AntInput value={addressForm.pincode} onChange={(e) => setAddressForm({ ...addressForm, pincode: e.target.value })} required />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm block mb-1">Address</label>
+                  <label className="text-xs sm:text-sm block mb-1">Address</label>
                   <TextArea value={addressForm.line1} onChange={(e) => setAddressForm({ ...addressForm, line1: e.target.value })} rows={3} required />
                 </div>
 
-                <div className="flex gap-2">
-                  <Button type="primary" htmlType="submit">{editingAddress ? 'Update' : 'Save'} Address</Button>
-                  <Button onClick={() => { setShowAddressForm(false); setEditingAddress(null); }}>Cancel</Button>
+                <div className="flex gap-2 flex-wrap">
+                  <Button type="primary" htmlType="submit" size="middle">{editingAddress ? 'Update' : 'Save'} Address</Button>
+                  <Button onClick={() => { setShowAddressForm(false); setEditingAddress(null); }} size="middle">Cancel</Button>
                 </div>
               </form>
             ) : (
               <div className="space-y-3">
                 {addresses.map((a) => (
-                  <div key={a.id} className="p-3 border rounded-lg flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">
+                  <div key={a.id} className="p-3 sm:p-4 border rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="font-medium text-sm sm:text-base flex items-center flex-wrap">
                         {a.label}
-                        {a.isDefault && <span className="ml-2 px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#2C1810] text-sm">Default</span>}
+                        {a.isDefault && <span className="ml-2 px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#2C1810] text-xs sm:text-sm">Default</span>}
                       </div>
-                      <div className="text-sm text-[#5C4033]">{a.line1}</div>
-                      <div className="text-sm text-[#5C4033]">{a.city}, {a.state} - {a.pincode}</div>
-                      <div className="text-sm text-[#5C4033] mt-1">{a.recipient} • {a.phone}</div>
+                      <div className="text-xs sm:text-sm text-[#5C4033]">{a.line1}</div>
+                      <div className="text-xs sm:text-sm text-[#5C4033]">{a.city}, {a.state} - {a.pincode}</div>
+                      <div className="text-xs sm:text-sm text-[#5C4033] mt-1">{a.recipient} • {a.phone}</div>
                     </div>
 
-                    <div>
+                    <div className="flex-shrink-0">
                       <AntDropdown menu={{ items: addressMenuItems(a) }}>
-                        <Button type="text">Actions</Button>
+                        <Button type="text" size="middle">Actions</Button>
                       </AntDropdown>
                     </div>
                   </div>
@@ -443,25 +443,25 @@ export default function EcommerceDashboard(): JSX.Element {
         </div>
       ),
       children: (
-        <AntCard className="p-4">
-          <h3 className="text-lg font-medium">Payment Methods</h3>
-          <p className="text-sm text-[#5C4033]">Manage saved cards and add new payment options</p>
+        <AntCard className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-medium">Payment Methods</h3>
+          <p className="text-xs sm:text-sm text-[#5C4033]">Manage saved cards and add new payment options</p>
 
           <div className="space-y-3 mt-4">
             {payments.map((pm) => (
-              <div key={pm.id} className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <div className="font-medium">{pm.brand} • • • • {pm.last4}</div>
-                  <div className="text-sm text-[#5C4033]">Expires {pm.expiry}</div>
+              <div key={pm.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3">
+                <div className="flex-1">
+                  <div className="font-medium text-sm sm:text-base">{pm.brand} • • • • {pm.last4}</div>
+                  <div className="text-xs sm:text-sm text-[#5C4033]">Expires {pm.expiry}</div>
                 </div>
-                <div>
-                  <Button type="text">Remove</Button>
+                <div className="flex-shrink-0">
+                  <Button type="text" size="middle">Remove</Button>
                 </div>
               </div>
             ))}
 
             <div className="pt-3">
-              <Button type="primary" onClick={addDummyCard} className="bg-[#D4AF37] text-[#2C1810]">Add Card</Button>
+              <Button type="primary" onClick={addDummyCard} className="bg-[#D4AF37] text-[#2C1810]" size="middle">Add Card</Button>
             </div>
           </div>
         </AntCard>
@@ -476,23 +476,23 @@ export default function EcommerceDashboard(): JSX.Element {
         </div>
       ),
       children: (
-        <AntCard className="p-4">
-          <h3 className="text-lg font-medium">Wishlist</h3>
-          <p className="text-sm text-[#5C4033]">Items you've saved for later</p>
+        <AntCard className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-medium">Wishlist</h3>
+          <p className="text-xs sm:text-sm text-[#5C4033]">Items you've saved for later</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3 mt-4">
             {wishlist.map((w) => (
-              <div key={w.id} className="p-3 border rounded-lg flex flex-col">
-                <div className="h-40 bg-gray-50 rounded-md mb-3 flex items-center justify-center overflow-hidden">
-                  {w.image ? <img src={w.image} alt={w.name} className="object-cover h-full w-full rounded-md" /> : <div className="text-sm">No Image</div>}
+              <div key={w.id} className="p-3 sm:p-4 border rounded-lg flex flex-col">
+                <div className="h-32 sm:h-40 bg-gray-50 rounded-md mb-3 flex items-center justify-center overflow-hidden">
+                  {w.image ? <img src={w.image} alt={w.name} className="object-cover h-full w-full rounded-md" /> : <div className="text-xs sm:text-sm">No Image</div>}
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium">{w.name}</div>
-                  <div className="text-sm text-[#5C4033]">{w.price}</div>
+                  <div className="font-medium text-sm sm:text-base">{w.name}</div>
+                  <div className="text-xs sm:text-sm text-[#5C4033]">{w.price}</div>
                 </div>
                 <div className="mt-3 flex gap-2">
-                  <Button className="flex-1">Add to Cart</Button>
-                  <Button type="text" onClick={() => removeFromWishlist(w.id)} className="text-red-600">Remove</Button>
+                  <Button className="flex-1" size="middle">Add to Cart</Button>
+                  <Button type="text" onClick={() => removeFromWishlist(w.id)} className="text-red-600" size="middle">Remove</Button>
                 </div>
               </div>
             ))}
@@ -509,25 +509,25 @@ export default function EcommerceDashboard(): JSX.Element {
         </div>
       ),
       children: (
-        <AntCard className="p-4">
-          <h3 className="text-lg font-medium">Account Settings</h3>
-          <p className="text-sm text-[#5C4033]">Security and preferences</p>
+        <AntCard className="p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-medium">Account Settings</h3>
+          <p className="text-xs sm:text-sm text-[#5C4033]">Security and preferences</p>
 
           <div className="space-y-3 mt-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Change Password</div>
-                <div className="text-sm text-[#5C4033]">Update your account password</div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex-1">
+                <div className="font-medium text-sm sm:text-base">Change Password</div>
+                <div className="text-xs sm:text-sm text-[#5C4033]">Update your account password</div>
               </div>
-              <Button type="default">Change</Button>
+              <Button type="default" size="middle">Change</Button>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Email Preferences</div>
-                <div className="text-sm text-[#5C4033]">Manage marketing and notification emails</div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex-1">
+                <div className="font-medium text-sm sm:text-base">Email Preferences</div>
+                <div className="text-xs sm:text-sm text-[#5C4033]">Manage marketing and notification emails</div>
               </div>
-              <Button type="default">Manage</Button>
+              <Button type="default" size="middle">Manage</Button>
             </div>
           </div>
         </AntCard>
@@ -536,43 +536,54 @@ export default function EcommerceDashboard(): JSX.Element {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FFF8E7] via-white to-white py-10 px-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#FFF8E7] via-white to-white py-4 sm:py-6 md:py-10 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {/* Left column - Profile Card */}
           <div className="lg:col-span-1">
-            <AntCard className="shadow-lg rounded-2xl p-6">
-              <div className="flex flex-col items-center text-center space-y-4">
+            <AntCard className="shadow-lg rounded-xl sm:rounded-2xl p-4 sm:p-6">
+              <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
                 <div className="relative">
-                  <AntAvatar size={112} src={profilePreview} style={{ border: '4px solid #D4AF37' }}>
+                  <AntAvatar size={80} src={profilePreview} className="w-20 h-20 sm:w-28 sm:h-28" style={{ border: '4px solid #D4AF37' }}>
                     {user.name.split(' ').map(n => n[0]).join('')}
                   </AntAvatar>
 
-                  <div className="absolute right-0 bottom-0 flex space-x-2">
-                    <Button type="primary" shape="circle" onClick={handleChoosePhoto} className="bg-[#D4AF37] text-[#2C1810]">
-                      <Camera className="w-4 h-4" />
+                  <div className="absolute right-0 bottom-0 flex space-x-1 sm:space-x-2">
+                    <Button 
+                      type="primary" 
+                      shape="circle" 
+                      onClick={handleChoosePhoto} 
+                      className="bg-[#D4AF37] text-[#2C1810] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
+                    >
+                      <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
-                    <Button danger type="default" shape="circle" onClick={handleRemovePhoto}>
-                      <Trash2 className="w-4 h-4" />
+                    <Button 
+                      danger 
+                      type="default" 
+                      shape="circle" 
+                      onClick={handleRemovePhoto}
+                      className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
+                    >
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
                   </div>
                 </div>
 
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleProfileChange} />
 
-                <div>
-                  <h3 className="font-serif text-xl text-[#2C1810]">{user.name}</h3>
-                  <p className="text-sm text-[#5C4033]">{user.email}</p>
-                  <p className="text-sm text-[#5C4033]">{user.phone}</p>
+                <div className="w-full px-2">
+                  <h3 className="font-serif text-lg sm:text-xl text-[#2C1810] break-words">{user.name}</h3>
+                  <p className="text-xs sm:text-sm text-[#5C4033] break-all mt-1">{user.email}</p>
+                  <p className="text-xs sm:text-sm text-[#5C4033] mt-1">{user.phone}</p>
                 </div>
 
                 <div className="w-full">
-                  <div className="my-4 border-t" />
+                  <div className="my-3 sm:my-4 border-t" />
                   <div className="flex flex-col space-y-2">
                     <Button onClick={() => setIsEditing(prev => !prev)} type={isEditing ? 'default' : 'dashed'} className="w-full">
                       {isEditing ? (<><Save className="mr-2 w-4 h-4" /> Save</>) : (<><Edit className="mr-2 w-4 h-4" /> Edit Profile</>)}
                     </Button>
-                    <Button type="text" onClick={handleLogout} className="w-full justify-start text-red-600">
+                    <Button type="text" onClick={handleLogout} className="w-full justify-center sm:justify-start text-red-600">
                       <LogOut className="mr-2 w-4 h-4" /> Logout
                     </Button>
                   </div>
@@ -580,13 +591,13 @@ export default function EcommerceDashboard(): JSX.Element {
               </div>
             </AntCard>
 
-            <AntCard className="mt-6 shadow-md rounded-2xl p-4">
+            <AntCard className="mt-4 sm:mt-6 shadow-md rounded-xl sm:rounded-2xl p-4">
               <div>
-                <h4 className="text-lg font-serif">Quick Actions</h4>
-                <p className="text-sm text-[#5C4033]">Common account tasks</p>
+                <h4 className="text-base sm:text-lg font-serif">Quick Actions</h4>
+                <p className="text-xs sm:text-sm text-[#5C4033]">Common account tasks</p>
                 <div className="flex flex-col space-y-2 mt-3">
-                  <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} type="default">New Order</Button>
-                  <Button onClick={() => addDummyCard()} type="default">Add Payment</Button>
+                  <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} type="default" size="middle">New Order</Button>
+                  <Button onClick={() => addDummyCard()} type="default" size="middle">Add Payment</Button>
                 </div>
               </div>
             </AntCard>
@@ -594,12 +605,12 @@ export default function EcommerceDashboard(): JSX.Element {
 
           {/* Right column - Tabs */}
           <div className="lg:col-span-3">
-            <AntCard className="rounded-2xl shadow-lg">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-2xl font-serif text-[#2C1810]">Account Dashboard</h2>
-                  <div className="flex items-center gap-3">
-                    <Button type="link" className="gap-2"><Heart className="w-4 h-4" /> Wishlist ({wishlist.length})</Button>
+            <AntCard className="rounded-xl sm:rounded-2xl shadow-lg">
+              <div className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+                  <h2 className="text-xl sm:text-2xl font-serif text-[#2C1810]">Account Dashboard</h2>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <Button type="link" className="gap-2 p-0 justify-start sm:justify-center"><Heart className="w-4 h-4" /> Wishlist ({wishlist.length})</Button>
                     <Button type="default" onClick={() => navigate('/orders')} className="gap-2"><Package className="w-4 h-4" /> View Orders</Button>
                   </div>
                 </div>
