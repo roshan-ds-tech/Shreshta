@@ -14,22 +14,25 @@ import {
 
 const products = [
   {
+    id: 1,
     image: '/jaggery-solid-regular.jpg',
     name: 'Cube Jaggery',
     description: 'Perfect cubes of pure jaggery, ideal for daily use and traditional recipes.',
-    price: '₹299/kg',
+    price: 299,
   },
   {
+    id: 2,
     image: 'https://images.unsplash.com/photo-1671548185843-3f50c6c1060b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob25leSUyMGxpcXVpZCUyMGdvbGRlbnxlbnwxfHx8fDE3NjEzMTA3NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
     name: 'Liquid Jaggery',
     description: 'Smooth, golden liquid jaggery perfect for drinks, desserts, and marinades.',
-    price: '₹349/kg',
+    price: 349,
   },
   {
+    id: 3,
     image: '/jaggery-powder2.webp',
     name: 'Powder Jaggery',
     description: 'Finely powdered jaggery for easy mixing in beverages and baking.',
-    price: '₹279/kg',
+    price: 279,
   },
 ];
 
@@ -60,8 +63,8 @@ const premiumproducts = [
 const features = [
   {
     icon: Leaf,
-    title: '100% Organic',
-    description: 'Sourced from certified organic sugarcane farms',
+    title: '100% Pure',
+    description: 'Sourced from certified sugarcane farms',
   },
   {
     icon: Award,
@@ -82,17 +85,17 @@ const features = [
 
 const testimonials = [
   {
-    name: 'Priya Sharma',
+    name: 'Roshan DS',
     text: 'The quality is exceptional! I can taste the purity in every bite. My family loves it.',
     rating: 5,
   },
   {
-    name: 'Rahul Mehta',
+    name: 'Prasanna Kumar',
     text: 'Best jaggery I have ever purchased. Authentic taste and premium quality.',
     rating: 5,
   },
   {
-    name: 'Anita Desai',
+    name: 'Nithin',
     text: 'Worth every penny! The liquid jaggery is my favorite for making desserts.',
     rating: 5,
   },
@@ -125,7 +128,7 @@ export function HomePage() {
               transition={{ delay: 0.3 }}
               className="inline-block mb-4 px-4 py-2 bg-[#D4AF37]/20 border border-[#D4AF37] rounded-full"
             >
-              <span className="text-[#D4AF37] text-sm">100% Organic & Pure</span>
+              <span className="text-[#D4AF37] text-sm">100% Pure & Premium</span>
             </motion.div>
 
             <motion.h1
@@ -134,7 +137,7 @@ export function HomePage() {
               transition={{ delay: 0.4 }}
               className="text-4xl md:text-6xl text-[#FFF8E7] mb-6 font-serif"
             >
-              Pure. Organic. Premium Jaggery Crafted with Tradition.
+              Pure, Premium Jaggery Crafted with Tradition.
             </motion.h1>
 
             <motion.p
@@ -143,7 +146,7 @@ export function HomePage() {
               transition={{ delay: 0.6 }}
               className="text-lg text-[#F5E6D3] mb-8"
             >
-              Experience the authentic taste of traditional jaggery, made from the finest organic sugarcane using time-honored methods.
+              Experience the authentic taste of traditional jaggery, made from the finest sugarcane using time-honored methods.
             </motion.p>
 
             <motion.div
@@ -155,6 +158,7 @@ export function HomePage() {
                 <Button
                   size="lg"
                   className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572] px-8 py-6 text-lg"
+                  style={{cursor: 'pointer'}}
                 >
                   Shop Now
                 </Button>
@@ -235,6 +239,7 @@ export function HomePage() {
                       <Button
                         size="sm"
                         className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                        style={{cursor: "pointer"}}
                       >
                         <ShoppingCart className="w-4 h-4 mr-2" />
                         Add to Cart
@@ -256,6 +261,7 @@ export function HomePage() {
                 size="lg"
                 variant="outline"
                 className="border-2 border-[#D4AF37] text-[#2C1810] hover:bg-[#D4AF37] hover:text-[#2C1810]"
+                style={{cursor: "pointer"}}
               >
                 View All Products
               </Button>
@@ -274,7 +280,7 @@ export function HomePage() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl text-[#FFF8E7] mb-4 font-serif">
-              Why Choose PureGur
+              Why Choose Shreshta
             </h2>
             <p className="text-[#C5A572] max-w-2xl mx-auto">
               We are committed to bringing you the finest quality jaggery with complete transparency and trust.
@@ -315,7 +321,7 @@ export function HomePage() {
               What Our Customers Say
             </h2>
             <p className="text-[#5C4033] max-w-2xl mx-auto">
-              Join thousands of satisfied customers who trust PureGur for their daily sweetness needs.
+              Join thousands of satisfied customers who trust Shreshta for their daily sweetness needs.
             </p>
           </motion.div>
 

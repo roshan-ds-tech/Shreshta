@@ -1,0 +1,1688 @@
+// src/pages/DashboardPage.tsx
+
+import React, { useState, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  User,
+  Package,
+  MapPin,
+  CreditCard,
+  Lock,
+  LogOut,
+  Camera,
+  Trash2,
+  Edit,
+  Save,
+  Plus,
+  MoreVertical,
+  Home,
+  Building,
+  ShoppingCart,
+  Menu,
+  X
+} from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+  CardFooter,
+} from '../components/ui/card';
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '../components/ui/tabs';
+import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '../components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../components/ui/alert-dialog';
+import { Separator } from '../components/ui/separator';
+import { Textarea } from '../components/ui/textarea';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import {
+import {
+import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
+import {
+import {
+
+// Dummy Data Types
+interface Address {
+  id: string;
+  type: 'Home' | 'Office';
+  name: string;
+  phone: string;
+  line1: string;
+  city: string;
+  state: string;
+  pincode: string;
+  isDefault: boolean;
+}
+
+type Order = {
+  id: string;
+  name: string;
+  image: string;
+  date: string;
+  status: 'Delivered' | 'Processing' | 'Cancelled';
+  price: string;
+};
+  id: string;
+  type: 'Home' | 'Office';
+  name: string;
+  phone: string;
+  line1: string;
+  city: string;
+  state: string;
+  pincode: string;
+  isDefault: boolean;
+};
+
+const dummyUser = {
+  name: 'Rohan Sharma',
+  email: 'rohan.sharma@example.com',
+  phone: '+91 98765 43210',
+  profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+};
+
+const dummyOrders: Order[] = [
+  {
+    id: 'ord_001',
+    name: 'Cube Jaggery - Premium (2kg)',
+    image: '/jaggery-solid-regular.jpg',
+    date: 'Oct 25, 2025',
+    status: 'Delivered',
+    price: '₹598.00',
+  },
+  {
+    id: 'ord_002',
+    name: 'Liquid Jaggery - Pure (1L)',
+    image: '/natural-liquid-jaggery.jpg',
+    date: 'Oct 28, 2025',
+    status: 'Processing',
+    price: '₹349.00',
+  },
+];
+
+const dummyAddresses: Address[] = [
+  {
+    id: 'addr_001',
+    type: 'Home',
+    name: 'Rohan Sharma',
+    phone: '+91 98765 43210',
+    line1: '42, Golden Rays Apt, 12th Main',
+    city: 'Indiranagar',
+    state: 'Karnataka',
+    pincode: '560038',
+    isDefault: true,
+  },
+];
+
+export default function DashboardPage() {
+  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // --- STATES ---
+  const [user, setUser] = useState(dummyUser);
+  const [profileImage, setProfileImage] = useState(dummyUser.profileImage);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+
+  const [orders, setOrders] = useState(dummyOrders);
+  const [addresses, setAddresses] = useState(dummyAddresses);
+  
+  // State for the address form
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [currentAddress, setCurrentAddress] = useState<Omit<Address, 'id' | 'isDefault'>>({
+    type: 'Home',
+    name: '',
+    phone: '',
+    line1: '',
+    city: '',
+    state: '',
+    pincode: '',
+  });
+
+  // --- HANDLERS ---
+
+  // Profile
+  const handleProfileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleProfileSave = () => {
+    setIsEditingProfile(false);
+    // Add API call logic here
+    console.log('Saving profile:', user);
+  };
+
+  const handleFileSelect = () => fileInputRef.current?.click();
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const fileUrl = URL.createObjectURL(e.target.files[0]);
+      setProfileImage(fileUrl);
+      // Add API call to upload image here
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setProfileImage('https://cdn-icons-png.flaticon.com/512/149/149071.png');
+    // Add API call to remove image here
+  };
+
+  // Address
+  const handleAddressFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setCurrentAddress({ ...currentAddress, [e.target.name]: e.target.value });
+  };
+  
+  const handleAddressTypeChange = (type: 'Home' | 'Office') => {
+    setCurrentAddress({ ...currentAddress, type });
+  };
+
+  const handleSaveAddress = () => {
+    // Add API call logic here
+    if (editingAddressId) {
+      // Update existing
+      setAddresses(addresses.map(addr => addr.id === editingAddressId ? { ...currentAddress, id: editingAddressId, isDefault: addr.isDefault } : addr));
+      console.log('Updating address:', editingAddressId, currentAddress);
+    } else {
+      // Add new
+      const newAddress: Address = { ...currentAddress, id: `addr_${Math.random()}`, isDefault: addresses.length === 0 };
+      setAddresses([...addresses, newAddress]);
+      console.log('Saving new address:', newAddress);
+    }
+    closeAddressForm();
+  };
+  
+  const openAddressForm = (address: Address | null = null) => {
+    if (address) {
+      setEditingAddressId(address.id);
+      setCurrentAddress(address);
+    } else {
+      setEditingAddressId(null);
+      setCurrentAddress({
+        type: 'Home',
+        name: user.name,
+        phone: user.phone,
+        line1: '',
+        city: '',
+        state: '',
+        pincode: '',
+      });
+    }
+    setShowAddressForm(true);
+  };
+  
+  const closeAddressForm = () => {
+    setShowAddressForm(false);
+    setEditingAddressId(null);
+  };
+  
+  const deleteAddress = (id: string) => {
+    setAddresses(addresses.filter(addr => addr.id !== id));
+    // Add API call
+  };
+  
+  const setDefaultAddress = (id: string) => {
+    setAddresses(addresses.map(addr => ({ ...addr, isDefault: addr.id === id })));
+    // Add API call
+  };
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
+  // --- RENDER ---
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#FFF8E7] to-white py-12 px-4">
+      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg border-2 border-[#C5A572]/20 overflow-hidden">
+        <Tabs
+          defaultValue="profile"
+          orientation="vertical"
+          className="flex flex-col md:flex-row gap-6 md:gap-8 p-4 md:p-8 overflow-x-hidden"
+        >
+          {/* --- VERTICAL NAVIGATION --- */}
+          <div className="w-full md:w-1/4 lg:w-1/5 shrink-0">
+            <Card className="bg-[#FFF8E7]/60 border-2 border-[#C5A572]/20 p-4">
+              {/* Profile Head */}
+              <div className="flex flex-col items-center text-center p-4 mb-4">
+                <div className="relative mb-4">
+                  <Avatar className="w-24 h-24 border-4 border-[#D4AF37]">
+                    <AvatarImage src={profileImage} alt={user.name} />
+                    <AvatarFallback className="bg-[#F5E6D3] text-[#2C1810]">
+                      {user.name
+                        .split(' ')
+                        .map(n => n[0])
+                        .join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        size="icon"
+                        className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                      >
+                        <Camera className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={handleFileSelect}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Change Picture
+                      </DropdownMenuItem>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                        hidden
+                        accept="image/*"
+                      />
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                        onClick={handleRemoveImage}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Remove Picture
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <h3 className="text-xl font-serif text-[#2C1810]">
+                  {user.name}
+                </h3>
+                <p className="text-sm text-[#5C4033] break-all">
+                  {user.email}
+                </p>
+              </div>
+
+              {/* Navigation Items */}
+              <TabsList className="flex flex-col h-auto w-full bg-transparent p-0 space-y-1">
+                <DashboardTabTrigger value="profile" icon={<User />}>
+                  Profile
+                </DashboardTabTrigger>
+                <DashboardTabTrigger value="orders" icon={<Package />}>
+                  My Orders
+                </DashboardTabTrigger>
+                <DashboardTabTrigger value="addresses" icon={<MapPin />}>
+                  My Addresses
+                </DashboardTabTrigger>
+                <DashboardTabTrigger value="payment" icon={<CreditCard />}>
+                  Payment Methods
+                </DashboardTabTrigger>
+                <DashboardTabTrigger value="security" icon={<Lock />}>
+                  Security
+                </DashboardTabTrigger>
+              </TabsList>
+              <Separator className="my-4 bg-[#C5A572]/30" />
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 px-4 py-3 text-base text-[#5C4033] hover:bg-[#D4AF37]/10"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-5 h-5" /> Logout
+              </Button>
+            </Card>
+          </div>
+
+          {/* --- TABS CONTENT --- */}
+          <div className="flex-1 min-w-0">
+            {/* --- PROFILE CONTENT --- */}
+            <TabsContent value="profile">
+              <Card className="border-2 border-[#C5A572]/20">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                      Personal Information
+                    </CardTitle>
+                    <CardDescription className="text-[#5C4033]">
+                      Manage your personal details.
+                    </CardDescription>
+                  </div>
+                  {isEditingProfile ? (
+                    <Button
+                      size="sm"
+                      className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                      onClick={handleProfileSave}
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10"
+                      onClick={() => setIsEditingProfile(true)}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  )}
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label htmlFor="name" className="text-[#5C4033]">
+                        Full Name
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={user.name}
+                        onChange={handleProfileInputChange}
+                        disabled={!isEditingProfile}
+                        className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37] disabled:bg-[#F5E6D3]/30"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-[#5C4033]">
+                        Email Address
+                      </Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={user.email}
+                        onChange={handleProfileInputChange}
+                        disabled={!isEditingProfile}
+                        className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37] disabled:bg-[#F5E6D3]/30"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="text-[#5C4033]">
+                      Phone Number
+                    </Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={user.phone}
+                      onChange={handleProfileInputChange}
+                      disabled={!isEditingProfile}
+                      className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37] disabled:bg-[#F5E6D3]/30"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* --- ORDERS CONTENT --- */}
+            <TabsContent value="orders">
+              <Card className="border-2 border-[#C5A572]/20">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                    My Orders
+                  </CardTitle>
+                  <CardDescription className="text-[#5C4033]">
+                    View your order history and track current orders.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {orders.length > 0 ? (
+                    orders.map(order => (
+                      <OrderItem key={order.id} order={order} />
+                    ))
+                  ) : (
+                    <p className="text-center text-[#5C4033] py-8">
+                      You haven't placed any orders yet.
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* --- ADDRESSES CONTENT --- */}
+            <TabsContent value="addresses">
+              <Card className="border-2 border-[#C5A572]/20">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                      My Addresses
+                    </CardTitle>
+                    <CardDescription className="text-[#5C4033]">
+                      Manage your shipping addresses.
+                    </CardDescription>
+                  </div>
+                  {!showAddressForm && (
+                    <Button
+                      size="sm"
+                      className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                      onClick={() => openAddressForm()}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add New
+                    </Button>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  {showAddressForm ? (
+                    <AddressForm
+                      address={currentAddress}
+                      onChange={handleAddressFormChange}
+                      onTypeChange={handleAddressTypeChange}
+                      onSave={handleSaveAddress}
+                      onCancel={closeAddressForm}
+                    />
+                  ) : (
+                    <div className="space-y-4">
+                      {addresses.length > 0 ? (
+                        addresses.map(addr => (
+                          <AddressCard
+                            key={addr.id}
+                            address={addr}
+                            onEdit={() => openAddressForm(addr)}
+                            onDelete={() => deleteAddress(addr.id)}
+                            onSetDefault={() => setDefaultAddress(addr.id)}
+                          />
+                        ))
+                      ) : (
+                        <p className="text-center text-[#5C4033] py-8">
+                          You have no saved addresses.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            {/* --- PAYMENT CONTENT --- */}
+            <TabsContent value="payment">
+              <Card className="border-2 border-[#C5A572]/20">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                    Payment Methods
+                  </CardTitle>
+                  <CardDescription className="text-[#5C4033]">
+                    Manage your saved payment methods.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <p className="text-center text-[#5C4033] py-8">
+                      No saved payment methods.
+                    </p>
+                    <Button
+                      size="sm"
+                      className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add New Card
+                    </Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* --- SECURITY CONTENT --- */}
+            <TabsContent value="security">
+              <div className="space-y-6">
+                <Card className="border-2 border-[#C5A572]/20">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                      Change Password
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label
+                        htmlFor="oldPassword"
+                        className="text-[#5C4033]"
+                      >
+                        Old Password
+                      </Label>
+                      <Input
+                        id="oldPassword"
+                        type="password"
+                        className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="newPassword"
+                        className="text-[#5C4033]"
+                      >
+                        New Password
+                      </Label>
+                      <Input
+                        id="newPassword"
+                        type="password"
+                        className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="confirmPassword"
+                        className="text-[#5C4033]"
+                      >
+                        Confirm New Password
+                      </Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
+                      />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]">
+                      Update Password
+                    </Button>
+                  </CardFooter>
+                </Card>
+
+                <Card className="border-2 border-red-500/30">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-serif text-red-700">
+                      Delete Account
+                    </CardTitle>
+                    <CardDescription className="text-red-600">
+                      This action is permanent and cannot be undone.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive">Delete My Account</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete your account and all
+                            your data. You cannot undo this action.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => console.log('Account deleted')}
+                          >
+                            Yes, delete my account
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </div>
+        </Tabs>
+      </div>
+    </div>
+  );
+}
+
+// --- SUB-COMPONENTS ---
+
+// Styled Tab Trigger for Dashboard Nav
+const DashboardTabTrigger = ({
+  value,
+  icon,
+  children,
+}: {
+  value: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) => (
+  <TabsTrigger
+    value={value}
+    className="w-full justify-start gap-3 px-4 py-3 text-base text-[#5C4033] data-[state=active]:bg-[#D4AF37]/20 data-[state=active]:text-[#2C1810] data-[state=active]:font-semibold hover:bg-[#D4AF37]/10"
+  >
+    <span className="w-5 h-5">{icon}</span>
+    {children}
+  </TabsTrigger>
+);
+
+// Order Item Card
+const OrderItem = ({ order }: { order: Order }) => (
+  <div className="flex flex-col sm:flex-row items-start gap-4 p-4 rounded-lg border-2 border-[#C5A572]/20 overflow-hidden">
+    <img
+      src={order.image}
+      alt={order.name}
+      className="w-full sm:w-24 h-24 object-cover rounded-md border border-[#C5A572]/10 shrink-0"
+    />
+    <div className="flex-1">
+      <h4 className="text-base font-semibold text-[#2C1810]">{order.name}</h4>
+      <p className="text-sm text-[#5C4033]">Order ID: {order.id}</p>
+      <p className="text-sm text-[#5C4033]">Placed on: {order.date}</p>
+    </div>
+    <div className="text-left sm:text-right w-full sm:w-auto">
+      <p className="text-lg font-semibold text-[#2C1810]">{order.price}</p>
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-medium ${
+          order.status === 'Delivered'
+            ? 'bg-green-100 text-green-800'
+            : order.status === 'Processing'
+            ? 'bg-yellow-100 text-yellow-800'
+            : 'bg-red-100 text-red-800'
+        }`}
+      >
+        {order.status}
+      </span>
+    </div>
+  </div>
+);
+
+// Address Card
+const AddressCard = ({
+  address,
+  onEdit,
+  onDelete,
+  onSetDefault,
+}: {
+  address: Address;
+  onEdit: () => void;
+  onDelete: () => void;
+  onSetDefault: () => void;
+}) => (
+  <div className="p-4 rounded-lg border-2 border-[#C5A572]/20 relative">
+    <div className="flex items-start gap-3">
+      <div className="mt-1 text-[#D4AF37]">
+        {address.type === 'Home' ? (
+          <Home className="w-5 h-5" />
+        ) : (
+          <Building className="w-5 h-5" />
+        )}
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-3 mb-1">
+          <h4 className="text-base font-semibold text-[#2C1810]">{address.name}</h4>
+          {address.isDefault && (
+             <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-[#D4AF37]/20 text-[#2C1810]">
+               Default
+             </span>
+          )}
+        </div>
+        <p className="text-sm text-[#5C4033]">{address.line1}</p>
+        <p className="text-sm text-[#5C4033]">{`${address.city}, ${address.state} - ${address.pincode}`}</p>
+        <p className="text-sm text-[#5C4033] mt-2">Phone: {address.phone}</p>
+      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="w-8 h-8 -mt-2 -mr-2 text-[#5C4033]">
+            <MoreVertical className="w-4 h-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {!address.isDefault && (
+            <DropdownMenuItem onClick={onSetDefault}>Set as Default</DropdownMenuItem>
+          )}
+          <DropdownMenuItem onClick={onEdit}>
+            <Edit className="w-4 h-4 mr-2" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              // src/pages/DashboardPage.tsx
+
+                User,
+                Package,
+                MapPin,
+                CreditCard,
+                Lock,
+                LogOut,
+                Camera,
+                Trash2,
+                Edit,
+                Save,
+                Plus,
+                MoreVertical,
+                Home,
+                Building,
+              } from 'lucide-react';
+                Card,
+                CardHeader,
+                CardTitle,
+                CardContent,
+                CardDescription,
+                CardFooter,
+              } from '../components/ui/card';
+                Tabs,
+                TabsList,
+                TabsTrigger,
+                TabsContent,
+              } from '../components/ui/tabs';
+                DropdownMenu,
+                DropdownMenuTrigger,
+                DropdownMenuContent,
+                DropdownMenuItem,
+                DropdownMenuSeparator,
+              } from '../components/ui/dropdown-menu';
+                AlertDialog,
+                AlertDialogAction,
+                AlertDialogCancel,
+                AlertDialogContent,
+                AlertDialogDescription,
+                AlertDialogFooter,
+                AlertDialogHeader,
+                AlertDialogTitle,
+                AlertDialogTrigger,
+              } from '../components/ui/alert-dialog';
+
+              // Interfaces & Types
+              interface UserType {
+                name: string;
+                email: string;
+                phone: string;
+                profileImage: string;
+              }
+
+              interface Order {
+                id: string;
+                name: string;
+                image: string;
+                date: string;
+                status: 'Delivered' | 'Processing' | 'Cancelled';
+                price: string;
+              }
+
+              interface Address {
+                id: string;
+                type: 'Home' | 'Office';
+                name: string;
+                phone: string;
+                line1: string;
+                city: string;
+                state: string;
+                pincode: string;
+                isDefault: boolean;
+              }
+
+              interface DashboardTabTriggerProps {
+                value: string;
+                icon: React.ReactNode;
+                children: React.ReactNode;
+              }
+
+              interface OrderItemProps {
+                order: Order;
+              }
+
+              interface AddressCardProps {
+                address: Address;
+                onEdit: () => void;
+                onDelete: () => void;
+                onSetDefault: () => void;
+              }
+
+              interface AddressFormProps {
+                address: Omit<Address, 'id' | 'isDefault'>;
+                onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+                onTypeChange: (type: 'Home' | 'Office') => void;
+                onSave: () => void;
+                onCancel: () => void;
+              }
+
+              // Dummy Data
+              const dummyUser: UserType = {
+                name: 'Rohan Sharma',
+                email: 'rohan.sharma@example.com',
+                phone: '+91 98765 43210',
+                profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+              };
+
+              const dummyOrders: Order[] = [
+                {
+                  id: 'ord_001',
+                  name: 'Cube Jaggery - Premium (2kg)',
+                  image: '/jaggery-solid-regular.jpg',
+                  date: 'Oct 25, 2025',
+                  status: 'Delivered',
+                  price: '₹598.00',
+                },
+                {
+                  id: 'ord_002',
+                  name: 'Liquid Jaggery - Pure (1L)',
+                  image: '/natural-liquid-jaggery.jpg',
+                  date: 'Oct 28, 2025',
+                  status: 'Processing',
+                  price: '₹349.00',
+                },
+              ];
+
+              const dummyAddresses: Address[] = [
+                {
+                  id: 'addr_001',
+                  type: 'Home',
+                  name: 'Rohan Sharma',
+                  phone: '+91 98765 43210',
+                  line1: '42, Golden Rays Apt, 12th Main',
+                  city: 'Indiranagar',
+                  state: 'Karnataka',
+                  pincode: '560038',
+                  isDefault: true,
+                },
+              ];
+
+              export default function DashboardPage(): JSX.Element {
+                const navigate = useNavigate();
+                const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+                // --- STATES ---
+                const [user, setUser] = useState<UserType>(dummyUser);
+                const [profileImage, setProfileImage] = useState<string>(dummyUser.profileImage);
+                const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false);
+
+                const [orders, setOrders] = useState<Order[]>(dummyOrders);
+                const [addresses, setAddresses] = useState<Address[]>(dummyAddresses);
+                
+                // State for the address form
+                const [showAddressForm, setShowAddressForm] = useState<boolean>(false);
+                const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+                const [currentAddress, setCurrentAddress] = useState<Omit<Address, 'id' | 'isDefault'>>({
+                  type: 'Home',
+                  name: '',
+                  phone: '',
+                  line1: '',
+                  city: '',
+                  state: '',
+                  pincode: '',
+                });
+
+                // --- HANDLERS ---
+
+                // Profile
+                const handleProfileInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+                  setUser({ ...user, [e.target.name]: e.target.value });
+                };
+
+                const handleProfileSave = (): void => {
+                  setIsEditingProfile(false);
+                  // Add API call logic here
+                  console.log('Saving profile:', user);
+                };
+
+                const handleFileSelect = (): void => fileInputRef.current?.click();
+
+                const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+                  if (e.target.files && e.target.files[0]) {
+                    const fileUrl = URL.createObjectURL(e.target.files[0]);
+                    setProfileImage(fileUrl);
+                    // Add API call to upload image here
+                  }
+                };
+
+                const handleRemoveImage = (): void => {
+                  setProfileImage('https://cdn-icons-png.flaticon.com/512/149/149071.png');
+                  // Add API call to remove image here
+                };
+
+                // Address
+                const handleAddressFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+                  setCurrentAddress({ ...currentAddress, [e.target.name]: e.target.value });
+                };
+                
+                const handleAddressTypeChange = (type: 'Home' | 'Office'): void => {
+                  setCurrentAddress({ ...currentAddress, type });
+                };
+
+                const handleSaveAddress = (): void => {
+                  // Add API call logic here
+                  if (editingAddressId) {
+                    // Update existing
+                    setAddresses(addresses.map(addr => addr.id === editingAddressId ? { ...currentAddress, id: editingAddressId, isDefault: addr.isDefault } : addr));
+                    console.log('Updating address:', editingAddressId, currentAddress);
+                  } else {
+                    // Add new
+                    const newAddress: Address = { ...currentAddress, id: `addr_${Math.random()}`, isDefault: addresses.length === 0 };
+                    setAddresses([...addresses, newAddress]);
+                    console.log('Saving new address:', newAddress);
+                  }
+                  closeAddressForm();
+                };
+                
+                const openAddressForm = (address: Address | null = null): void => {
+                  if (address) {
+                    setEditingAddressId(address.id);
+                    setCurrentAddress(address);
+                  } else {
+                    setEditingAddressId(null);
+                    setCurrentAddress({
+                      type: 'Home',
+                      name: user.name,
+                      phone: user.phone,
+                      line1: '',
+                      city: '',
+                      state: '',
+                      pincode: '',
+                    });
+                  }
+                  setShowAddressForm(true);
+                };
+                
+                const closeAddressForm = (): void => {
+                  setShowAddressForm(false);
+                  setEditingAddressId(null);
+                };
+                
+                const deleteAddress = (id: string): void => {
+                  setAddresses(addresses.filter(addr => addr.id !== id));
+                  // Add API call
+                };
+                
+                const setDefaultAddress = (id: string): void => {
+                  setAddresses(addresses.map(addr => ({ ...addr, isDefault: addr.id === id })));
+                  // Add API call
+                };
+
+                // Logout
+                const handleLogout = (): void => {
+                  localStorage.removeItem('user');
+                  navigate('/login');
+                };
+
+                // --- RENDER ---
+                return (
+                  <div className="min-h-screen bg-gradient-to-b from-[#FFF8E7] to-white py-12 px-4">
+                    <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg border-2 border-[#C5A572]/20 overflow-hidden">
+                      <Tabs
+                        defaultValue="profile"
+                        orientation="vertical"
+                        className="flex flex-col md:flex-row gap-6 md:gap-8 p-4 md:p-8 overflow-x-hidden"
+                      >
+                        {/* --- VERTICAL NAVIGATION --- */}
+                        <div className="w-full md:w-1/4 lg:w-1/5 shrink-0">
+                          <Card className="bg-[#FFF8E7]/60 border-2 border-[#C5A572]/20 p-4">
+                            {/* Profile Head */}
+                            <div className="flex flex-col items-center text-center p-4 mb-4">
+                              <div className="relative mb-4">
+                                <Avatar className="w-24 h-24 border-4 border-[#D4AF37]">
+                                  <AvatarImage src={profileImage} alt={user.name} />
+                                  <AvatarFallback className="bg-[#F5E6D3] text-[#2C1810]">
+                                    {user.name
+                                      .split(' ')
+                                      .map(n => n[0])
+                                      .join('')}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      size="icon"
+                                      className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                                    >
+                                      <Camera className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={handleFileSelect}>
+                                      <Edit className="w-4 h-4 mr-2" />
+                                      Change Picture
+                                    </DropdownMenuItem>
+                                    <input
+                                      type="file"
+                                      ref={fileInputRef}
+                                      onChange={handleImageChange}
+                                      hidden
+                                      accept="image/*"
+                                    />
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                                      onClick={handleRemoveImage}
+                                    >
+                                      <Trash2 className="w-4 h-4 mr-2" />
+                                      Remove Picture
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                              <h3 className="text-xl font-serif text-[#2C1810]">
+                                {user.name}
+                              </h3>
+                              <p className="text-sm text-[#5C4033] break-all">
+                                {user.email}
+                              </p>
+                            </div>
+
+                            {/* Navigation Items */}
+                            <TabsList className="flex flex-col h-auto w-full bg-transparent p-0 space-y-1">
+                              <DashboardTabTrigger value="profile" icon={<User />}>
+                                Profile
+                              </DashboardTabTrigger>
+                              <DashboardTabTrigger value="orders" icon={<Package />}>
+                                My Orders
+                              </DashboardTabTrigger>
+                              <DashboardTabTrigger value="addresses" icon={<MapPin />}>
+                                My Addresses
+                              </DashboardTabTrigger>
+                              <DashboardTabTrigger value="payment" icon={<CreditCard />}>
+                                Payment Methods
+                              </DashboardTabTrigger>
+                              <DashboardTabTrigger value="security" icon={<Lock />}>
+                                Security
+                              </DashboardTabTrigger>
+                            </TabsList>
+                            <Separator className="my-4 bg-[#C5A572]/30" />
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start gap-3 px-4 py-3 text-base text-[#5C4033] hover:bg-[#D4AF37]/10"
+                              onClick={handleLogout}
+                            >
+                              <LogOut className="w-5 h-5" /> Logout
+                            </Button>
+                          </Card>
+                        </div>
+
+                        {/* --- TABS CONTENT --- */}
+                        <div className="flex-1 min-w-0">
+                          {/* --- PROFILE CONTENT --- */}
+                          <TabsContent value="profile">
+                            <Card className="border-2 border-[#C5A572]/20">
+                              <CardHeader className="flex flex-row items-center justify-between">
+                                <div>
+                                  <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                                    Personal Information
+                                  </CardTitle>
+                                  <CardDescription className="text-[#5C4033]">
+                                    Manage your personal details.
+                                  </CardDescription>
+                                </div>
+                                {isEditingProfile ? (
+                                  <Button
+                                    size="sm"
+                                    className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                                    onClick={handleProfileSave}
+                                  >
+                                    <Save className="w-4 h-4 mr-2" />
+                                    Save
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10"
+                                    onClick={() => setIsEditingProfile(true)}
+                                  >
+                                    <Edit className="w-4 h-4 mr-2" />
+                                    Edit
+                                  </Button>
+                                )}
+                              </CardHeader>
+                              <CardContent className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  <div>
+                                    <Label htmlFor="name" className="text-[#5C4033]">
+                                      Full Name
+                                    </Label>
+                                    <Input
+                                      id="name"
+                                      name="name"
+                                      value={user.name}
+                                      onChange={handleProfileInputChange}
+                                      disabled={!isEditingProfile}
+                                      className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37] disabled:bg-[#F5E6D3]/30"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="email" className="text-[#5C4033]">
+                                      Email Address
+                                    </Label>
+                                    <Input
+                                      id="email"
+                                      name="email"
+                                      type="email"
+                                      value={user.email}
+                                      onChange={handleProfileInputChange}
+                                      disabled={!isEditingProfile}
+                                      className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37] disabled:bg-[#F5E6D3]/30"
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <Label htmlFor="phone" className="text-[#5C4033]">
+                                    Phone Number
+                                  </Label>
+                                  <Input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    value={user.phone}
+                                    onChange={handleProfileInputChange}
+                                    disabled={!isEditingProfile}
+                                    className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37] disabled:bg-[#F5E6D3]/30"
+                                  />
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </TabsContent>
+
+                          {/* --- ORDERS CONTENT --- */}
+                          <TabsContent value="orders">
+                            <Card className="border-2 border-[#C5A572]/20">
+                              <CardHeader>
+                                <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                                  My Orders
+                                </CardTitle>
+                                <CardDescription className="text-[#5C4033]">
+                                  View your order history and track current orders.
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                {orders.length > 0 ? (
+                                  orders.map(order => (
+                                    <OrderItem key={order.id} order={order} />
+                                  ))
+                                ) : (
+                                  <p className="text-center text-[#5C4033] py-8">
+                                    You haven't placed any orders yet.
+                                  </p>
+                                )}
+                              </CardContent>
+                            </Card>
+                          </TabsContent>
+
+                          {/* --- ADDRESSES CONTENT --- */}
+                          <TabsContent value="addresses">
+                            <Card className="border-2 border-[#C5A572]/20">
+                              <CardHeader className="flex flex-row items-center justify-between">
+                                <div>
+                                  <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                                    My Addresses
+                                  </CardTitle>
+                                  <CardDescription className="text-[#5C4033]">
+                                    Manage your shipping addresses.
+                                  </CardDescription>
+                                </div>
+                                {!showAddressForm && (
+                                  <Button
+                                    size="sm"
+                                    className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                                    onClick={() => openAddressForm()}
+                                  >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add New
+                                  </Button>
+                                )}
+                              </CardHeader>
+                              <CardContent>
+                                {showAddressForm ? (
+                                  <AddressForm
+                                    address={currentAddress}
+                                    onChange={handleAddressFormChange}
+                                    onTypeChange={handleAddressTypeChange}
+                                    onSave={handleSaveAddress}
+                                    onCancel={closeAddressForm}
+                                  />
+                                ) : (
+                                  <div className="space-y-4">
+                                    {addresses.length > 0 ? (
+                                      addresses.map(addr => (
+                                        <AddressCard
+                                          key={addr.id}
+                                          address={addr}
+                                          onEdit={() => openAddressForm(addr)}
+                                          onDelete={() => deleteAddress(addr.id)}
+                                          onSetDefault={() => setDefaultAddress(addr.id)}
+                                        />
+                                      ))
+                                    ) : (
+                                      <p className="text-center text-[#5C4033] py-8">
+                                        You have no saved addresses.
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              </CardContent>
+                            </Card>
+                          </TabsContent>
+                          
+                          {/* --- PAYMENT CONTENT --- */}
+                          <TabsContent value="payment">
+                            <Card className="border-2 border-[#C5A572]/20">
+                              <CardHeader>
+                                <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                                  Payment Methods
+                                </CardTitle>
+                                <CardDescription className="text-[#5C4033]">
+                                  Manage your saved payment methods.
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                  <p className="text-center text-[#5C4033] py-8">
+                                    No saved payment methods.
+                                  </p>
+                                  <Button
+                                    size="sm"
+                                    className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                                  >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add New Card
+                                  </Button>
+                              </CardContent>
+                            </Card>
+                          </TabsContent>
+
+                          {/* --- SECURITY CONTENT --- */}
+                          <TabsContent value="security">
+                            <div className="space-y-6">
+                              <Card className="border-2 border-[#C5A572]/20">
+                                <CardHeader>
+                                  <CardTitle className="text-2xl font-serif text-[#2C1810]">
+                                    Change Password
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                  <div>
+                                    <Label
+                                      htmlFor="oldPassword"
+                                      className="text-[#5C4033]"
+                                    >
+                                      Old Password
+                                    </Label>
+                                    <Input
+                                      id="oldPassword"
+                                      type="password"
+                                      className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label
+                                      htmlFor="newPassword"
+                                      className="text-[#5C4033]"
+                                    >
+                                      New Password
+                                    </Label>
+                                    <Input
+                                      id="newPassword"
+                                      type="password"
+                                      className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label
+                                      htmlFor="confirmPassword"
+                                      className="text-[#5C4033]"
+                                    >
+                                      Confirm New Password
+                                    </Label>
+                                    <Input
+                                      id="confirmPassword"
+                                      type="password"
+                                      className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
+                                    />
+                                  </div>
+                                </CardContent>
+                                <CardFooter>
+                                  <Button className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]">
+                                    Update Password
+                                  </Button>
+                                </CardFooter>
+                              </Card>
+
+                              <Card className="border-2 border-red-500/30">
+                                <CardHeader>
+                                  <CardTitle className="text-2xl font-serif text-red-700">
+                                    Delete Account
+                                  </CardTitle>
+                                  <CardDescription className="text-red-600">
+                                    This action is permanent and cannot be undone.
+                                  </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button variant="destructive">Delete My Account</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                          Are you absolutely sure?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          This will permanently delete your account and all
+                                          your data. You cannot undo this action.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => console.log('Account deleted')}
+                                        >
+                                          Yes, delete my account
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </TabsContent>
+                        </div>
+                      </Tabs>
+                    </div>
+                  </div>
+                );
+              }
+
+              // --- SUB-COMPONENTS ---
+
+              // Styled Tab Trigger for Dashboard Nav
+              const DashboardTabTrigger: React.FC<DashboardTabTriggerProps> = ({
+                value,
+                icon,
+                children,
+              }) => (
+                <TabsTrigger
+                  value={value}
+                  className="w-full justify-start gap-3 px-4 py-3 text-base text-[#5C4033] data-[state=active]:bg-[#D4AF37]/20 data-[state=active]:text-[#2C1810] data-[state=active]:font-semibold hover:bg-[#D4AF37]/10"
+                >
+                  <span className="w-5 h-5">{icon}</span>
+                  {children}
+                </TabsTrigger>
+              );
+
+              // Order Item Card
+              const OrderItem: React.FC<OrderItemProps> = ({ order }) => (
+                <div className="flex flex-col sm:flex-row items-start gap-4 p-4 rounded-lg border-2 border-[#C5A572]/20 overflow-hidden">
+                  <img
+                    src={order.image}
+                    alt={order.name}
+                    className="w-full sm:w-24 h-24 object-cover rounded-md border border-[#C5A572]/10 shrink-0"
+                  />
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-[#2C1810]">{order.name}</h4>
+                    <p className="text-sm text-[#5C4033]">Order ID: {order.id}</p>
+                    <p className="text-sm text-[#5C4033]">Placed on: {order.date}</p>
+                  </div>
+                  <div className="text-left sm:text-right w-full sm:w-auto">
+                    <p className="text-lg font-semibold text-[#2C1810]">{order.price}</p>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        order.status === 'Delivered'
+                          ? 'bg-green-100 text-green-800'
+                          : order.status === 'Processing'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      {order.status}
+                    </span>
+                  </div>
+                </div>
+              );
+
+              // Address Card
+              const AddressCard: React.FC<AddressCardProps> = ({
+                address,
+                onEdit,
+                onDelete,
+                onSetDefault,
+              }) => (
+                <div className="p-4 rounded-lg border-2 border-[#C5A572]/20 relative">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1 text-[#D4AF37]">
+                      {address.type === 'Home' ? (
+                        <Home className="w-5 h-5" />
+                      ) : (
+                        <Building className="w-5 h-5" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h4 className="text-base font-semibold text-[#2C1810]">{address.name}</h4>
+                        {address.isDefault && (
+                           <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-[#D4AF37]/20 text-[#2C1810]">
+                             Default
+                           </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-[#5C4033]">{address.line1}</p>
+                      <p className="text-sm text-[#5C4033]">{`${address.city}, ${address.state} - ${address.pincode}`}</p>
+                      <p className="text-sm text-[#5C4033] mt-2">Phone: {address.phone}</p>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="w-8 h-8 -mt-2 -mr-2 text-[#5C4033]">
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {!address.isDefault && (
+                          <DropdownMenuItem onClick={onSetDefault}>Set as Default</DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem onClick={onEdit}>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem
+                              className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                              onSelect={(e) => e.preventDefault()} // Prevents dropdown from closing
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Address?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete this address?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              );
+
+              // Address Form
+              const AddressForm: React.FC<AddressFormProps> = ({
+                address,
+                onChange,
+                onTypeChange,
+                onSave,
+                onCancel,
+              }) => (
+                <div className="p-4 rounded-lg border-2 border-[#C5A572]/20 space-y-4">
+                  <h3 className="text-lg font-serif text-[#2C1810]">
+                    {'Add New Address'}
+                  </h3>
+                  <div className="space-y-4">
+                     <div>
+                      <Label className="text-[#5C4033]">Address Type</Label>
+                       <div className="flex gap-4 mt-2">
+                          <Button 
+                            variant={address.type === 'Home' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => onTypeChange('Home')}
+                            className={address.type === 'Home' ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]' : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'}
+                          >
+                            <Home className="w-4 h-4 mr-2" /> Home
+                          </Button>
+                          <Button 
+                            variant={address.type === 'Office' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => onTypeChange('Office')}
+                            className={address.type === 'Office' ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]' : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'}
+                          >
+                            <Building className="w-4 h-4 mr-2" /> Office
+                          </Button>
+                       </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="name" className="text-[#5C4033]">Full Name</Label>
+                        <Input id="name" name="name" value={address.name} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone" className="text-[#5C4033]">Phone Number</Label>
+                        <Input id="phone" name="phone" value={address.phone} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="line1" className="text-[#5C4033]">Address</Label>
+                      <Textarea id="line1" name="line1" value={address.line1} onChange={onChange} placeholder="Flat, House no., Building, Company, Apartment" className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="city" className="text-[#5C4033]">Town / City</Label>
+                        <Input id="city" name="city" value={address.city} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="state" className="text-[#5C4033]">State</Label>
+                        <Input id="state" name="state" value={address.state} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <Label htmlFor="pincode" className="text-[#5C4033]">Pincode</Label>
+                        <Input id="pincode" name="pincode" value={address.pincode} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-3 pt-4">
+                    <Button variant="outline" onClick={onCancel} className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10">
+                      Cancel
+                    </Button>
+                    <Button onClick={onSave} className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]">
+                      Save Address
+                    </Button>
+                  </div>
+                </div>
+              );</div></Button></DropdownMenuTrigger></div></AlertDialogTrigger></DropdownMenuItem></div></div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Address?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this address?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  </div>
+);
+
+// Address Form
+const AddressForm = ({
+  address,
+  onChange,
+  onTypeChange,
+  onSave,
+  onCancel,
+}: {
+  address: Omit<Address, 'id' | 'isDefault'>;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onTypeChange: (type: 'Home' | 'Office') => void;
+  onSave: () => void;
+  onCancel: () => void;
+}) => (
+  <div className="p-4 rounded-lg border-2 border-[#C5A572]/20 space-y-4">
+    <h3 className="text-lg font-serif text-[#2C1810]">
+      {'Add New Address'}
+    </h3>
+    <div className="space-y-4">
+       <div>
+        <Label className="text-[#5C4033]">Address Type</Label>
+         <div className="flex gap-4 mt-2">
+            <Button 
+              variant={address.type === 'Home' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => onTypeChange('Home')}
+              className={address.type === 'Home' ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]' : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'}
+            >
+              <Home className="w-4 h-4 mr-2" /> Home
+            </Button>
+            <Button 
+              variant={address.type === 'Office' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => onTypeChange('Office')}
+              className={address.type === 'Office' ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]' : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'}
+            >
+              <Building className="w-4 h-4 mr-2" /> Office
+            </Button>
+         </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="name" className="text-[#5C4033]">Full Name</Label>
+          <Input id="name" name="name" value={address.name} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+        </div>
+        <div>
+          <Label htmlFor="phone" className="text-[#5C4033]">Phone Number</Label>
+          <Input id="phone" name="phone" value={address.phone} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+        </div>
+      </div>
+      
+      <div>
+        <Label htmlFor="line1" className="text-[#5C4033]">Address</Label>
+        <Textarea id="line1" name="line1" value={address.line1} onChange={onChange} placeholder="Flat, House no., Building, Company, Apartment" className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <Label htmlFor="city" className="text-[#5C4033]">Town / City</Label>
+          <Input id="city" name="city" value={address.city} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+        </div>
+        <div>
+          <Label htmlFor="state" className="text-[#5C4033]">State</Label>
+          <Input id="state" name="state" value={address.state} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+        </div>
+        <div>
+          <Label htmlFor="pincode" className="text-[#5C4033]">Pincode</Label>
+          <Input id="pincode" name="pincode" value={address.pincode} onChange={onChange} className="mt-1 border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]" />
+        </div>
+      </div>
+    </div>
+    <div className="flex justify-end gap-3 pt-4">
+      <Button variant="outline" onClick={onCancel} className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10">
+        Cancel
+      </Button>
+      <Button onClick={onSave} className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]">
+        Save Address
+      </Button>
+    </div>
+  </div>
+);

@@ -14,7 +14,7 @@ export function Footer() {
 
             </span>
             <p className="text-sm text-[#C5A572]" style={{}}>
-              Premium organic jaggery crafted with tradition. Pure, natural sweetness from farm to table.
+              Premium jaggery crafted with tradition. Pure, natural sweetness from farm to table.
             </p>
           </div>
 
@@ -74,7 +74,7 @@ export function Footer() {
               </a>
             </div>
             <div className="mt-6 space-y-2">
-              <p className="text-sm">Email: info@puregur.com</p>
+              <p className="text-sm">Email: info@shreshta.com</p>
               <p className="text-sm">Phone: +91 98765 43210</p>
             </div>
           </div>

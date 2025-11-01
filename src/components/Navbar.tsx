@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'motion/react';
+import { useCart } from '../contexts/CartContext';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { cartCount } = useCart();
   
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -57,20 +59,21 @@ export function Navbar() {
             <Link to="/cart" className="relative text-[#F5E6D3] hover:text-[#D4AF37] transition-colors">
               <ShoppingCart className="w-5 h-5" />
               <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-[#2C1810] rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                0
+                {String(cartCount)}
               </span>
             </Link>
             <Link to="/login">
               <Button
                 variant="ghost"
                 className="text-[#F5E6D3] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10"
+                style={{cursor: "pointer"}}
               >
                 <User className="w-4 h-4 mr-2" />
                 Login
               </Button>
             </Link>
             <Link to="/signup">
-              <Button className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]">
+              <Button className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]" style={{cursor: "pointer"}}>
                 Sign Up
               </Button>
             </Link>

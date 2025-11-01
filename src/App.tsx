@@ -15,8 +15,9 @@ import { use, useEffect } from 'react';
 import DashboardPage from "./pages/DashboardPage";
 
 
-export default function App() {
+import { CartProvider } from './contexts/CartContext';
 
+export default function App() {
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/accounts/signup/')
     .then(res => console.log(res.data))
@@ -24,9 +25,10 @@ export default function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-[#FFF8E7]">
-        <Navbar />
+    <CartProvider>
+      <Router>
+        <div className="min-h-screen bg-[#FFF8E7]">
+          <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
@@ -42,5 +44,6 @@ export default function App() {
         <Footer />
       </div>
     </Router>
+    </CartProvider>
   );
 }

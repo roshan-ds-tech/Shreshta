@@ -77,7 +77,7 @@ export function PrivacyPolicyPage() {
                 <div>
                   <h3 className="text-lg text-[#2C1810] mb-2">6. Your Rights</h3>
                   <p>
-                    You have the right to access, correct, or delete your personal information. You can also opt out of marketing communications at any time. To exercise these rights, please contact us at privacy@puregur.com.
+                    You have the right to access, correct, or delete your personal information. You can also opt out of marketing communications at any time. To exercise these rights, please contact us at privacy@shreshta.com.
                   </p>
                 </div>
               </div>
@@ -135,14 +135,14 @@ export function PrivacyPolicyPage() {
                 <div>
                   <h3 className="text-lg text-[#2C1810] mb-2">7. Intellectual Property</h3>
                   <p>
-                    All content on this website, including text, graphics, logos, images, and software, is the property of PureGur and is protected by copyright and other intellectual property laws. You may not reproduce, distribute, or use any content without our written permission.
+                    All content on this website, including text, graphics, logos, images, and software, is the property of Shreshta and is protected by copyright and other intellectual property laws. You may not reproduce, distribute, or use any content without our written permission.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-lg text-[#2C1810] mb-2">8. Limitation of Liability</h3>
                   <p>
-                    To the fullest extent permitted by law, PureGur shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our website or products. Our total liability shall not exceed the amount you paid for the product.
+                    To the fullest extent permitted by law, Shreshta shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our website or products. Our total liability shall not exceed the amount you paid for the product.
                   </p>
                 </div>
 
@@ -158,7 +158,7 @@ export function PrivacyPolicyPage() {
                   <p>
                     If you have any questions about these Terms and Conditions or Privacy Policy, please contact us at:
                     <br />
-                    Email: legal@puregur.com
+                    Email: legal@Shreshta.com
                     <br />
                     Phone: +91 98765 43210
                   </p>

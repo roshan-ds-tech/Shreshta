@@ -1,15 +1,37 @@
 import { motion } from 'motion/react';
-import { ShoppingCart } from 'lucide-react';
-import { Button } from './ui/button';
+import { Pointer, ShoppingCart } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { Button } from "./ui/button";
 
 interface ProductCardProps {
+  id: number;
   image: string;
   name: string;
   description: string;
-  price?: string;
+  price: string;
 }
 
-export function ProductCard({ image, name, description, price }: ProductCardProps) {
+export function ProductCard({ id, image, name, description, price }: ProductCardProps) {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    // 1. Clean the string: Remove anything that isn't a digit or a decimal point.
+    //    e.g., "$19.99" becomes "19.99"
+    const cleanedPrice = price.replace(/[^0-9.]/g, '');
+    
+    // 2. Convert the clean string to a number (float)
+    const numericPrice = parseFloat(cleanedPrice);
+
+    // 3. Check if conversion was successful (it might be NaN if price was "Free" or "N/A")
+    if (!isNaN(numericPrice)) {
+      // 4. Call addToCart with the NUMBER, not the string
+      addToCart({ id, image, name, price: numericPrice });
+    } else {
+      console.error("Could not parse price for item:", name, "Input price:", price);
+      // You could also show a small error message to the user here
+    }
+  };
+
   return (
     <motion.div
       whileHover={{ y: -8 }}
@@ -31,6 +53,8 @@ export function ProductCard({ image, name, description, price }: ProductCardProp
             <Button
               size="sm"
               className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+              style={{cursor: "pointer"}}
+              onClick={handleAddToCart}
             >
               <ShoppingCart className="w-4 h-4 mr-2" />
               Add to Cart

@@ -15,8 +15,8 @@ const faqs = [
         a: 'Jaggery is a traditional unrefined sweetener made from sugarcane juice or palm sap. Unlike refined sugar, jaggery retains minerals like iron, magnesium, and potassium, making it a healthier alternative. It has a rich, caramel-like flavor and is packed with nutrients.',
       },
       {
-        q: 'Are your products 100% organic?',
-        a: 'Yes, all our jaggery products are made from certified organic sugarcane grown without the use of chemical pesticides or fertilizers. We follow traditional, eco-friendly farming practices to ensure the highest quality and purity.',
+        q: 'Are your products 100% Pure?',
+        a: 'Yes, all our jaggery products are made from certified sugarcane grown without the use of chemical pesticides or fertilizers. We follow traditional, eco-friendly farming practices to ensure the highest quality and purity.',
       },
       {
         q: 'What types of jaggery do you offer?',
@@ -75,7 +75,7 @@ const faqs = [
       },
       {
         q: 'How do I initiate a return?',
-        a: 'Contact our customer support team via email (support@puregur.com) or phone (+91 98765 43210) with your order number and reason for return. Our team will guide you through the process.',
+        a: 'Contact our customer support team via email (support@shreshta.com) or phone (+91 98765 43210) with your order number and reason for return. Our team will guide you through the process.',
       },
       {
         q: 'When will I receive my refund?',
@@ -176,7 +176,7 @@ export function FAQPage() {
               Our customer support team is here to help! Reach out to us and we'll get back to you as soon as possible.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="mailto:support@puregur.com">
+              <a href="mailto:support@shreshta.com">
                 <button className="px-6 py-3 bg-[#D4AF37] text-[#2C1810] rounded-lg hover:bg-[#C5A572] transition-colors">
                   Email Us
                 </button>

@@ -59,7 +59,7 @@ export function ContactPage() {
                   <div>
                     <h3 className="text-[#2C1810] mb-1">Address</h3>
                     <p className="text-sm text-[#5C4033]">
-                      123 Jaggery Lane, Organic Farm District<br />
+                      123 Jaggery Lane, Farm District<br />
                       Mumbai, Maharashtra 400001<br />
                       India
                     </p>
@@ -86,8 +86,8 @@ export function ContactPage() {
                   <div>
                     <h3 className="text-[#2C1810] mb-1">Email</h3>
                     <p className="text-sm text-[#5C4033]">
-                      info@puregur.com<br />
-                      support@puregur.com
+                      info@shreshta.com<br />
+                      support@shreshta.com
                     </p>
                   </div>
                 </div>

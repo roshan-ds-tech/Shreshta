@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, styleEffect } from 'motion/react';
 import { ProductCard } from '../components/ProductCard';
 import { Filter } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -39,8 +39,8 @@ const allProducts = [
   {
     id: 4,
     image: '/natural-liquid-jaggery.jpg',
-    name: 'Liquid Jaggery - Organic',
-    description: 'Premium organic liquid jaggery with rich flavor and natural sweetness.',
+    name: 'Liquid Jaggery',
+    description: 'Premium liquid jaggery with rich flavor and natural sweetness.',
     price: '₹399/kg',
     category: 'liquid',
   },
@@ -79,24 +79,24 @@ const allProducts = [
   {
     id: 9,
     image: 'jaggery-powder2.jpg',
-    name: 'Powder Jaggery - Organic',
-    description: 'Premium organic powder jaggery with certified purity.',
+    name: 'Powder Jaggery',
+    description: 'Premium powder jaggery with certified purity.',
     price: '₹319/kg',
     category: 'powder',
   },
   {
     id: 10,
     image: 'ghee.avif',
-    name: 'Cow Ghee - Organic',
-    description: 'Premium organic Cow Ghee with certified purity.',
+    name: 'Cow Ghee',
+    description: 'Premium Cow Ghee with certified purity.',
     price: '₹5099/L',
     category: 'dairy',
   },
   {
     id: 11,
     image: 'butter.webp',
-    name: 'Pure Butter  - Organic',
-    description: 'Premium organic Pure Butter with certified purity.',
+    name: 'Pure Butter',
+    description: 'Premium Pure Butter with certified purity.',
     price: '₹669/Kg',
     category: 'dairy',
   },
@@ -186,7 +186,7 @@ export function ProductsPage() {
             transition={{ delay: 0.2 }}
             className="text-[#C5A572] max-w-2xl mx-auto"
           >
-            Discover our complete range of premium organic jaggery products
+            Discover our complete range of premium jaggery products
           </motion.p>
         </div>
       </section>
@@ -207,7 +207,9 @@ export function ProductsPage() {
                   className={selectedCategory === 'all' 
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
+                    
                   }
+                  style={{cursor: "pointer"}}
                 >
                   All Products
                 </Button>
@@ -219,6 +221,7 @@ export function ProductsPage() {
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
                   }
+                  style={{cursor: "pointer"}}
                 >
                   Cube & Blocks
                 </Button>
@@ -230,6 +233,7 @@ export function ProductsPage() {
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
                   }
+                  style={{cursor: "pointer"}}
                 >
                   Liquid
                 </Button>
@@ -241,6 +245,7 @@ export function ProductsPage() {
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
                   }
+                  style={{cursor: "pointer"}}
                 >
                   Powder
                 </Button>
@@ -253,6 +258,7 @@ export function ProductsPage() {
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
                   }
+                  style={{cursor: "pointer"}}
                 >
                   Dairy
                 </Button>
@@ -265,6 +271,7 @@ export function ProductsPage() {
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
                   }
+                  style={{cursor: "pointer"}}
                 >
                   Beverages
                 </Button>
@@ -277,6 +284,7 @@ export function ProductsPage() {
                     ? 'bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]'
                     : 'border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10'
                   }
+                  style={{cursor: "pointer"}}
                 >
                   Millets
                 </Button>
@@ -289,13 +297,13 @@ export function ProductsPage() {
             <div className="flex items-center gap-2">
               <span className="text-[#2C1810]">Sort by:</span>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[180px] border-[#C5A572]">
+                <SelectTrigger className="w-[180px] border-[#C5A572] "style={{cursor: "pointer"}}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="featured">Featured</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  <SelectItem value="featured" style={{cursor: "pointer"}}>Featured</SelectItem>
+                  <SelectItem value="price-low" style={{cursor: "pointer"}}>Price: Low to High</SelectItem>
+                  <SelectItem value="price-high" style={{cursor: "pointer"}}>Price: High to Low</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -315,6 +323,7 @@ export function ProductsPage() {
                 transition={{ delay: index * 0.1 }}
               >
                 <ProductCard
+                  id={product.id}
                   image={product.image}
                   name={product.name}
                   description={product.description}

@@ -1,49 +1,18 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
-
-interface CartItem {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  quantity: number;
-}
+import { CartContext } from '../contexts/CartContext';
 
 export function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: 'Cube Jaggery - Premium',
-      image: 'jaggery-solid-regular.jpg',
-      price: 299,
-      quantity: 2,
-    },
-    {
-      id: 2,
-      name: 'Liquid Jaggery - Pure',
-      image: 'natural-liquid-jaggery.jpg',
-      price: 349,
-      quantity: 1,
-    },
-  ]);
+  const cartContext = useContext(CartContext);
 
-  const updateQuantity = (id: number, delta: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
-  };
+  if (!cartContext) {
+    throw new Error('CartPage must be used within a CartProvider');
+  }
 
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+  const { cartItems, removeFromCart, updateQuantity } = cartContext;
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal > 500 ? 0 : 50;
@@ -71,14 +40,13 @@ export function CartPage() {
             <h2 className="text-2xl text-[#2C1810] mb-4">Your cart is empty</h2>
             <p className="text-[#5C4033] mb-8">Add some delicious jaggery products to get started!</p>
             <Link to="/products">
-              <Button className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]">
+              <Button className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572] " style={{cursor: "pointer"}}>
                 Browse Products
               </Button>
             </Link>
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item, index) => (
                 <motion.div
@@ -98,36 +66,32 @@ export function CartPage() {
                       <h3 className="text-[#2C1810] mb-1">{item.name}</h3>
                       <p className="text-[#D4AF37]">₹{item.price}/kg</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        size="sm"
-                        variant="outline"
+                    <div className="flex items-center gap-4">
+                      <button
                         onClick={() => updateQuantity(item.id, -1)}
-                        className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10 h-8 w-8 p-0"
+                        className="p-2 hover:bg-gray-100 rounded-full"
+                        style={{cursor: "pointer"}}
                       >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <span className="w-12 text-center text-[#2C1810]">{item.quantity}</span>
-                      <Button
-                        size="sm"
-                        variant="outline"
+                        <Minus className="w-4 h-4 text-[#5C4033]" />
+                      </button>
+                      <span className="text-[#2C1810] w-8 text-center">
+                        {item.quantity}
+                      </span>
+                      <button
                         onClick={() => updateQuantity(item.id, 1)}
-                        className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10 h-8 w-8 p-0"
+                        className="p-2 hover:bg-gray-100 rounded-full"
+                        style={{cursor: "pointer"}}
                       >
-                        <Plus className="w-4 h-4" />
-                      </Button>
+                        <Plus className="w-4 h-4 text-[#5C4033]" />
+                      </button>
                     </div>
-                    <div className="text-right min-w-[100px]">
-                      <p className="text-[#2C1810]">₹{item.price * item.quantity}</p>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => removeItem(item.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="p-2 hover:bg-\[\#D4AF37\]-100 rounded-full"
+                      style={{cursor: "pointer"}}
                     >
-                      <Trash2 className="w-5 h-5" />
-                    </Button>
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </button>
                   </div>
                 </motion.div>
               ))}
@@ -138,83 +102,57 @@ export function CartPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-white rounded-lg shadow-md border-2 border-[#C5A572]/20 p-6 sticky top-24"
+                className="bg-white rounded-lg shadow-md border-2 border-[#C5A572]/20 p-6"
               >
-                <h2 className="text-xl text-[#2C1810] mb-6">Order Summary</h2>
-
-                <div className="space-y-4 mb-6">
+                <h2 className="text-xl text-[#2C1810] mb-4 font-serif">Order Summary</h2>
+                <div className="space-y-2">
                   <div className="flex justify-between text-[#5C4033]">
                     <span>Subtotal</span>
                     <span>₹{subtotal}</span>
                   </div>
                   <div className="flex justify-between text-[#5C4033]">
                     <span>Shipping</span>
-                    <span>{shipping === 0 ? 'FREE' : `₹${shipping}`}</span>
+                    <span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
                   </div>
-                  {subtotal < 500 && (
-                    <p className="text-sm text-[#D4AF37]">
-                      Add ₹{500 - subtotal} more for free shipping!
-                    </p>
-                  )}
-                  <div className="border-t border-[#C5A572]/30 pt-4">
-                    <div className="flex justify-between text-[#2C1810]">
+                  <div className="border-t border-[#C5A572]/20 pt-2 mt-2">
+                    <div className="flex justify-between font-semibold text-[#2C1810]">
                       <span>Total</span>
                       <span>₹{total}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm text-[#5C4033] mb-2 block">
-                      Have a coupon code?
-                    </label>
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="Enter code"
-                        className="border-[#C5A572] focus:border-[#D4AF37] focus:ring-[#D4AF37]"
-                      />
-                      <Button
-                        variant="outline"
-                        className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#2C1810]"
-                      >
-                        Apply
-                      </Button>
-                    </div>
-                  </div>
-
-                  <Button className="w-full bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572] py-6">
-                    Proceed to Checkout
-                  </Button>
-
-                  <Link to="/products">
-                    <Button
-                      variant="outline"
-                      className="w-full border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10"
-                    >
-                      Continue Shopping
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-[#C5A572]/30">
-                  <h3 className="text-sm text-[#2C1810] mb-3">We Accept</h3>
+                {/* --- ADDED COUPON FORM --- */}
+                <div className="mt-6">
+                  <label htmlFor="coupon" className="block text-sm font-medium text-[#5C4033] mb-2">
+                    Have a coupon?
+                  </label>
                   <div className="flex gap-2">
-                    <div className="px-3 py-2 bg-[#F5E6D3] rounded text-xs text-[#2C1810]">
-                      VISA
-                    </div>
-                    <div className="px-3 py-2 bg-[#F5E6D3] rounded text-xs text-[#2C1810]">
-                      MasterCard
-                    </div>
-                    <div className="px-3 py-2 bg-[#F5E6D3] rounded text-xs text-[#2C1810]">
-                      UPI
-                    </div>
-                    <div className="px-3 py-2 bg-[#F5E6D3] rounded text-xs text-[#2C1810]">
-                      COD
-                    </div>
+                    <input
+                      type="text"
+                      id="coupon"
+                      placeholder="Enter coupon code"
+                      className="w-full flex-1 rounded-md border border-[#C5A572]/50 px-3 py-2 text-sm text-[#2C1810] placeholder:text-[#5C4033]/70 focus:outline-none focus:ring-1 focus:ring-[#D4AF37]"
+                      style={{ cursor: "text" }}
+                    />
+                    <Button
+                      type="button" 
+                      className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                      style={{ cursor: "pointer", whiteSpace: "nowrap" }} 
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </div>
+                <Button
+                  className="w-full mt-6 bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
+                  style={{ cursor: "pointer", whiteSpace: "nowrap" }}
+                >
+                  Proceed to Checkout
+                </Button>
+                <p className="text-xs text-center mt-4 text-[#5C4033]">
+                  Free shipping on orders above ₹500
+                </p>
               </motion.div>
             </div>
           </div>

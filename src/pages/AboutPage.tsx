@@ -67,13 +67,13 @@ export function AboutPage() {
             </h2>
             <div className="space-y-6 text-[#5C4033]">
               <p>
-                PureGur was born from a simple belief: that the sweetness we add to our lives should be as pure and natural as possible. Our journey began in the lush sugarcane fields of rural India, where generations of farmers have perfected the art of making jaggery using traditional methods.
+                Shreshta was born from a simple belief: that the sweetness we add to our lives should be as pure and natural as possible. Our journey began in the lush sugarcane fields of rural India, where generations of farmers have perfected the art of making jaggery using traditional methods.
               </p>
               <p>
                 We work closely with local farming communities, ensuring that every step of the process—from cultivation to packaging—adheres to the highest standards of quality and sustainability. Our jaggery is free from chemicals, additives, and preservatives, retaining all the natural nutrients and minerals that make it a healthier alternative to refined sugar.
               </p>
               <p>
-                Today, PureGur stands as a symbol of purity, authenticity, and trust. We are proud to bring the goodness of traditional jaggery to modern kitchens, helping families across the country embrace a healthier, more natural way of sweetening their lives.
+                Today, Shreshta stands as a symbol of purity, authenticity, and trust. We are proud to bring the goodness of traditional jaggery to modern kitchens, helping families across the country embrace a healthier, more natural way of sweetening their lives.
               </p>
             </div>
           </motion.div>
@@ -92,7 +92,7 @@ export function AboutPage() {
             >
               <h3 className="text-2xl text-[#D4AF37] mb-4 font-serif">Our Mission</h3>
               <p className="text-[#F5E6D3]">
-                To revive the age-old tradition of jaggery making and make premium quality, organic jaggery accessible to every household. We strive to support local farmers, promote sustainable agriculture, and provide our customers with a healthier, more natural sweetener that nourishes both body and soul.
+                To revive the age-old tradition of jaggery making and make premium quality, Premium jaggery accessible to every household. We strive to support local farmers, promote sustainable agriculture, and provide our customers with a healthier, more natural sweetener that nourishes both body and soul.
               </p>
             </motion.div>
 
@@ -194,7 +194,7 @@ export function AboutPage() {
                 <div>
                   <h4 className="text-[#2C1810] mb-2">Harvesting</h4>
                   <p className="text-sm text-[#5C4033]">
-                    Fresh sugarcane is carefully harvested from organic farms at peak ripeness to ensure maximum sweetness and nutrition.
+                    Fresh sugarcane is carefully harvested from farms at peak ripeness to ensure maximum sweetness and nutrition.
                   </p>
                 </div>
               </div>

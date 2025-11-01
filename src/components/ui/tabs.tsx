@@ -1,18 +1,21 @@
+// src/components/ui/tabs.tsx
+
 "use client";
 
 import * as React from "react";
-import * as TabsPrimitive from "@radix-ui/react-tabs@1.1.3";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
 import { cn } from "./utils";
 
-function Tabs({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.Root>) {
+function Tabs(
+  {
+    className,
+    ...props
+  }: React.ComponentProps<typeof TabsPrimitive.Root>) {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
-      className={cn("flex flex-col gap-2", className)}
+      className={cn(className)}
       {...props}
     />
   );
@@ -57,7 +60,8 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      // REMOVED: "flex-1"
+      className={cn("outline-none", className)}
       {...props}
     />
   );
