@@ -1,87 +1,50 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+// src/components/EcommerceDashboard.tsx
+import React, { useState, useRef, ChangeEvent, JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   User,
   Package,
   MapPin,
   CreditCard,
-  Lock,
   LogOut,
   Camera,
   Trash2,
   Edit,
   Save,
   Plus,
-  MoreVertical,
-  Home,
-  Building,
-  ShoppingCart
+  Heart,
+  Settings,
 } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../components/ui/card';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../components/ui/tabs';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '../components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '../components/ui/alert-dialog';
-import { Separator } from '../components/ui/separator';
-import { Textarea } from '../components/ui/textarea';
+  Button,
+  Card as AntCard,
+  Input as AntInput,
+  Tabs as AntTabs,
+  Avatar as AntAvatar,
+  Dropdown as AntDropdown,
+  MenuProps,
+  Modal,
+  Space,
+  message,
+} from 'antd';
+import type { UploadProps } from 'antd';
+import 'antd/dist/reset.css'; // AntD v5 reset - keep separate in your layout/root if needed
+
+const { TextArea } = AntInput;
+const { confirm } = Modal;
 
 // Types
 interface UserType {
   name: string;
   email: string;
-  phone: string;
-  profileImage: string;
-}
-
-interface Order {
-  id: string;
-  name: string;
-  image: string;
-  date: string;
-  status: 'Delivered' | 'Processing' | 'Cancelled';
-  price: string;
-  quantity: number;
+  phone?: string;
+  profileImage?: string;
 }
 
 interface Address {
   id: string;
-  type: 'Home' | 'Office';
-  name: string;
+  label: string;
+  recipient: string;
   phone: string;
   line1: string;
   city: string;
@@ -90,611 +53,562 @@ interface Address {
   isDefault: boolean;
 }
 
-// Dummy Data
-const dummyUser: UserType = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
+interface Order {
+  id: string;
+  product: string;
+  date: string;
+  status: string;
+  total: string;
+}
+
+interface PaymentMethod {
+  id: string;
+  brand: string;
+  last4: string;
+  expiry: string;
+}
+
+interface WishlistItem {
+  id: string;
+  name: string;
+  image?: string;
+  price: string;
+}
+
+// Starter Data (you can replace these with API calls)
+const initialUser: UserType = {
+  name: 'Aarav Sharma',
+  email: 'aarav@example.com',
   phone: '+91 98765 43210',
   profileImage: '/default-avatar.png',
 };
 
-const dummyOrders: Order[] = [
+const starterAddresses: Address[] = [
   {
-    id: 'ORD_001',
-    name: 'Premium Jaggery Powder',
-    image: '/jaggery-powder.jpg',
-    date: '28 Oct 2025',
-    status: 'Delivered',
-    price: '₹499',
-    quantity: 2,
-  },
-  {
-    id: 'ORD_002',
-    name: 'Premium Liquid Jaggery',
-    image: '/liquid-jaggery.jpg',
-    date: '30 Oct 2025',
-    status: 'Processing',
-    price: '₹799',
-    quantity: 1,
-  },
-];
-
-const dummyAddresses: Address[] = [
-  {
-    id: 'ADDR_001',
-    type: 'Home',
-    name: 'John Doe',
+    id: 'addr_1',
+    label: 'Home',
+    recipient: 'Aarav Sharma',
     phone: '+91 98765 43210',
-    line1: '123, Palm Grove Apartments, MG Road',
-    city: 'Mumbai',
-    state: 'Maharashtra',
-    pincode: '400001',
+    line1: '12, Olive Street, Central Park',
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    pincode: '560001',
     isDefault: true,
   },
 ];
 
-export default function DashboardPage() {
+const starterOrders: Order[] = [
+  { id: 'ord_1001', product: 'Premium Jaggery Powder', date: '2025-10-28', status: 'Delivered', total: '₹499' },
+  { id: 'ord_1002', product: 'Liquid Jaggery', date: '2025-10-30', status: 'Processing', total: '₹799' },
+];
+
+const starterPayments: PaymentMethod[] = [
+  { id: 'pm_1', brand: 'Visa', last4: '4242', expiry: '12/27' },
+];
+
+const starterWishlist: WishlistItem[] = [
+  { id: 'w_1', name: 'Organic Sugarcane Jaggery', image: '/jaggery.jpg', price: '₹299' },
+];
+
+export default function EcommerceDashboard(): JSX.Element {
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // States
-  const [user, setUser] = useState<UserType>(dummyUser);
-  const [profileImage, setProfileImage] = useState<string>(dummyUser.profileImage);
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [orders] = useState<Order[]>(dummyOrders);
-  const [addresses, setAddresses] = useState<Address[]>(dummyAddresses);
+  const [user, setUser] = useState<UserType>(initialUser);
+  const [profilePreview, setProfilePreview] = useState<string | undefined>(initialUser.profileImage);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [addresses, setAddresses] = useState<Address[]>(starterAddresses);
+  const [orders] = useState<Order[]>(starterOrders);
+  const [payments, setPayments] = useState<PaymentMethod[]>(starterPayments);
+  const [wishlist, setWishlist] = useState<WishlistItem[]>(starterWishlist);
+
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
-  const [currentAddress, setCurrentAddress] = useState<Omit<Address, 'id' | 'isDefault'>>({
-    type: 'Home',
-    name: '',
+  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+
+  // Address form state
+  const emptyAddress: Omit<Address, 'id' | 'isDefault'> = {
+    label: 'Home',
+    recipient: '',
     phone: '',
     line1: '',
     city: '',
     state: '',
     pincode: '',
-  });
+  } as any;
+  const [addressForm, setAddressForm] = useState<any>(emptyAddress);
 
   // Handlers
-  const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setProfileImage(URL.createObjectURL(file));
-    }
+  const handleChoosePhoto = () => fileInputRef.current?.click();
+
+  const handleProfileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // local preview
+    const url = URL.createObjectURL(file);
+    setProfilePreview(url);
+
+    message.success('Profile image selected (preview only). Implement upload API to save permanently.');
+    // TODO: upload file to server using FormData
   };
 
-  const handleRemoveProfilePic = () => {
-    setProfileImage('/default-avatar.png');
+  const handleRemovePhoto = () => {
+    setProfilePreview('/default-avatar.png');
+    message.info('Profile picture removed locally. Implement server API to remove permanently.');
+    // TODO: call API to remove on server
   };
 
-  const handleProfileSave = () => {
-    setIsEditingProfile(false);
-    // TODO: Add API call to update profile
+  const handleSaveProfile = () => {
+    setIsEditing(false);
+    message.success('Profile updated (mock). Hook this up to your API.');
+    // TODO: call API to save profile information
   };
 
-  const handleAddressSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingAddressId) {
-      setAddresses(addresses.map(addr => 
-        addr.id === editingAddressId 
-          ? { ...currentAddress, id: editingAddressId, isDefault: addr.isDefault }
-          : addr
-      ));
-    } else {
-      const newAddress: Address = {
-        ...currentAddress,
-        id: `ADDR_${Date.now()}`,
-        isDefault: addresses.length === 0,
-      };
-      setAddresses([...addresses, newAddress]);
-    }
-    setShowAddressForm(false);
-    setEditingAddressId(null);
-  };
-
-  const handleAddressEdit = (address: Address) => {
-    setCurrentAddress(address);
-    setEditingAddressId(address.id);
+  // Address handlers
+  const openAddAddress = () => {
+    setAddressForm(emptyAddress);
+    setEditingAddress(null);
     setShowAddressForm(true);
   };
 
-  const handleAddressDelete = (id: string) => {
-    setAddresses(addresses.filter(addr => addr.id !== id));
+  const openEditAddress = (addr: Address) => {
+    setEditingAddress(addr);
+    setAddressForm({ ...addr });
+    setShowAddressForm(true);
   };
 
-  const handleSetDefaultAddress = (id: string) => {
-    setAddresses(addresses.map(addr => ({
-      ...addr,
-      isDefault: addr.id === id,
-    })));
+  const submitAddress = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (editingAddress) {
+      setAddresses(prev => prev.map(a => (a.id === editingAddress.id ? { ...a, ...addressForm } : a)));
+      message.success('Address updated');
+    } else {
+      const newAddr: Address = { id: `addr_${Date.now()}`, isDefault: addresses.length === 0, ...addressForm } as Address;
+      setAddresses(prev => [...prev, newAddr]);
+      message.success('Address saved');
+    }
+    setShowAddressForm(false);
+    setEditingAddress(null);
+  };
+
+  const deleteAddress = (id: string) => {
+    confirm({
+      title: 'Delete address?',
+      content: 'Are you sure you want to delete this address? This action cannot be undone.',
+      okText: 'Delete',
+      okType: 'danger',
+      onOk() {
+        setAddresses(prev => prev.filter(a => a.id !== id));
+        message.success('Address deleted');
+      },
+    });
+  };
+
+  const setDefaultAddress = (id: string) => {
+    setAddresses(prev => prev.map(a => ({ ...a, isDefault: a.id === id })));
+    message.success('Default address updated');
+  };
+
+  // Wishlist
+  const removeFromWishlist = (id: string) => {
+    setWishlist(prev => prev.filter(w => w.id !== id));
+    message.success('Removed from wishlist');
+  };
+
+  // Payments (mock)
+  const addDummyCard = () => {
+    setPayments(prev => [...prev, { id: `pm_${Date.now()}`, brand: 'Mastercard', last4: '5555', expiry: '10/28' }]);
+    message.success('Dummy card added');
   };
 
   const handleLogout = () => {
-    // TODO: Add logout logic
+    // TODO: clear auth and navigate
     navigate('/login');
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FFF8E7] to-white py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        <Tabs defaultValue="profile" className="space-y-8">
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Sidebar */}
-            <Card className="md:w-64 bg-[#FFF8E7]/60 border-2 border-[#C5A572]/20">
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="relative">
-                    <Avatar className="w-24 h-24 border-4 border-[#D4AF37]">
-                      <AvatarImage src={profileImage} />
-                      <AvatarFallback className="bg-[#F5E6D3] text-[#2C1810]">
-                        {user.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          size="icon"
-                          className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
-                        >
-                          <Camera className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Change Picture
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={handleRemoveProfilePic}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Remove Picture
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleProfilePicChange}
-                    />
+  // Dropdown menu example for address item (using AntD items prop)
+  const addressMenuItems = (addr: Address): MenuProps['items'] => [
+    {
+      key: 'edit',
+      label: 'Edit',
+      onClick: () => openEditAddress(addr),
+    },
+    {
+      key: 'setdefault',
+      label: addr.isDefault ? 'Default' : 'Set as Default',
+      onClick: () => setDefaultAddress(addr.id),
+      disabled: addr.isDefault,
+    },
+    {
+      key: 'delete',
+      label: 'Delete',
+      danger: true,
+      onClick: () => deleteAddress(addr.id),
+    },
+  ];
+
+  // Tabs children (keeps original structure but mapped inside AntTabs)
+  const tabsItems = [
+    {
+      key: 'dashboard',
+      label: (
+        <div className="flex items-center gap-2">
+          <User className="w-4 h-4" />
+          <span>Profile</span>
+        </div>
+      ),
+      children: (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <AntCard className="p-4 shadow-none">
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-lg font-medium">Personal Information</h3>
+                    <p className="text-sm text-[#5C4033]">Update name, email and phone</p>
                   </div>
-                  <div className="text-center">
-                    <h3 className="font-serif text-xl text-[#2C1810]">{user.name}</h3>
-                    <p className="text-sm text-[#5C4033]">{user.email}</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm block mb-1">Full Name</label>
+                <AntInput value={user.name} disabled={!isEditing} onChange={(e) => setUser({ ...user, name: e.target.value })} />
+              </div>
+
+              <div>
+                <label className="text-sm block mb-1">Email</label>
+                <AntInput value={user.email} disabled={!isEditing} onChange={(e) => setUser({ ...user, email: e.target.value })} />
+              </div>
+
+              <div>
+                <label className="text-sm block mb-1">Phone</label>
+                <AntInput value={user.phone} disabled={!isEditing} onChange={(e) => setUser({ ...user, phone: e.target.value })} />
+              </div>
+
+              {isEditing && (
+                <div className="flex gap-2">
+                  <Button type="primary" onClick={handleSaveProfile}>
+                    <Save className="mr-2 w-4 h-4" />
+                    Save
+                  </Button>
+                  <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+                </div>
+              )}
+            </div>
+          </AntCard>
+
+          <AntCard className="p-4 shadow-none">
+            <div>
+              <h3 className="text-lg font-medium">Recent Orders</h3>
+              <p className="text-sm text-[#5C4033]">Last 3 orders at a glance</p>
+
+              <div className="space-y-3 mt-4">
+                {orders.slice(0, 3).map((o) => (
+                  <div key={o.id} className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">{o.product}</div>
+                      <div className="text-sm text-[#5C4033]">{o.date} • {o.id}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold">{o.total}</div>
+                      <div className="text-sm text-[#5C4033]">{o.status}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AntCard>
+        </div>
+      ),
+    },
+    {
+      key: 'orders',
+      label: (
+        <div className="flex items-center gap-2">
+          <Package className="w-4 h-4" />
+          <span>Orders</span>
+        </div>
+      ),
+      children: (
+        <AntCard className="p-4">
+          <h3 className="text-lg font-medium">All Orders</h3>
+          <p className="text-sm text-[#5C4033]">Track and view order details</p>
+
+          <div className="space-y-3 mt-4">
+            {orders.map((o) => (
+              <div key={o.id} className="p-3 border rounded-lg flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{o.product}</div>
+                  <div className="text-sm text-[#5C4033]">{o.date} • {o.id}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{o.total}</div>
+                  <div className="text-sm text-[#5C4033]">{o.status}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </AntCard>
+      ),
+    },
+    {
+      key: 'addresses',
+      label: (
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4" />
+          <span>Addresses</span>
+        </div>
+      ),
+      children: (
+        <AntCard className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-medium">Manage Addresses</h3>
+              <p className="text-sm text-[#5C4033]">Add, edit and set default delivery addresses</p>
+            </div>
+            <div>
+              <Button type="primary" onClick={openAddAddress} className="bg-[#D4AF37] text-[#2C1810]">
+                <Plus className="mr-2 w-4 h-4" />
+                Add Address
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            {showAddressForm ? (
+              <form onSubmit={submitAddress} className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm block mb-1">Label</label>
+                    <AntInput value={addressForm.label} onChange={(e) => setAddressForm({ ...addressForm, label: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Recipient</label>
+                    <AntInput value={addressForm.recipient} onChange={(e) => setAddressForm({ ...addressForm, recipient: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Phone</label>
+                    <AntInput value={addressForm.phone} onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Pincode</label>
+                    <AntInput value={addressForm.pincode} onChange={(e) => setAddressForm({ ...addressForm, pincode: e.target.value })} required />
                   </div>
                 </div>
 
-                <Separator className="my-6 bg-[#C5A572]/30" />
+                <div>
+                  <label className="text-sm block mb-1">Address</label>
+                  <TextArea value={addressForm.line1} onChange={(e) => setAddressForm({ ...addressForm, line1: e.target.value })} rows={3} required />
+                </div>
 
-                <TabsList className="flex flex-col w-full space-y-2">
-                  <TabsTrigger
-                    value="profile"
-                    className="w-full justify-start gap-2 p-2.5 text-[#5C4033] hover:text-[#2C1810] hover:bg-[#D4AF37]/10 data-[state=active]:bg-[#D4AF37]/20 data-[state=active]:text-[#2C1810]"
-                  >
-                    <User className="h-4 w-4" />
-                    Profile
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="orders"
-                    className="w-full justify-start gap-2 p-2.5 text-[#5C4033] hover:text-[#2C1810] hover:bg-[#D4AF37]/10 data-[state=active]:bg-[#D4AF37]/20 data-[state=active]:text-[#2C1810]"
-                  >
-                    <Package className="h-4 w-4" />
-                    Orders
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="addresses"
-                    className="w-full justify-start gap-2 p-2.5 text-[#5C4033] hover:text-[#2C1810] hover:bg-[#D4AF37]/10 data-[state=active]:bg-[#D4AF37]/20 data-[state=active]:text-[#2C1810]"
-                  >
-                    <MapPin className="h-4 w-4" />
-                    Addresses
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="payment"
-                    className="w-full justify-start gap-2 p-2.5 text-[#5C4033] hover:text-[#2C1810] hover:bg-[#D4AF37]/10 data-[state=active]:bg-[#D4AF37]/20 data-[state=active]:text-[#2C1810]"
-                  >
-                    <CreditCard className="h-4 w-4" />
-                    Payment
-                  </TabsTrigger>
-                </TabsList>
-
-                <Separator className="my-6 bg-[#C5A572]/30" />
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-2 text-[#5C4033] hover:text-[#2C1810] hover:bg-[#D4AF37]/10"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Main Content */}
-            <div className="flex-1 space-y-8">
-              <TabsContent value="profile">
-                <Card className="border-2 border-[#C5A572]/20">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl font-serif text-[#2C1810]">
-                          Profile Information
-                        </CardTitle>
-                        <CardDescription className="text-[#5C4033]">
-                          Manage your personal details
-                        </CardDescription>
+                <div className="flex gap-2">
+                  <Button type="primary" htmlType="submit">{editingAddress ? 'Update' : 'Save'} Address</Button>
+                  <Button onClick={() => { setShowAddressForm(false); setEditingAddress(null); }}>Cancel</Button>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-3">
+                {addresses.map((a) => (
+                  <div key={a.id} className="p-3 border rounded-lg flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">
+                        {a.label}
+                        {a.isDefault && <span className="ml-2 px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#2C1810] text-sm">Default</span>}
                       </div>
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsEditingProfile(!isEditingProfile)}
-                        className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10"
-                      >
-                        {isEditingProfile ? (
-                          <>
-                            <Save className="mr-2 h-4 w-4" />
-                            Save
-                          </>
-                        ) : (
-                          <>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </>
-                        )}
-                      </Button>
+                      <div className="text-sm text-[#5C4033]">{a.line1}</div>
+                      <div className="text-sm text-[#5C4033]">{a.city}, {a.state} - {a.pincode}</div>
+                      <div className="text-sm text-[#5C4033] mt-1">{a.recipient} • {a.phone}</div>
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <div>
-                        <Label className="text-[#5C4033]">Full Name</Label>
-                        <Input
-                          value={user.name}
-                          disabled={!isEditingProfile}
-                          className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-[#5C4033]">Email</Label>
-                        <Input
-                          value={user.email}
-                          disabled={!isEditingProfile}
-                          className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-[#5C4033]">Phone</Label>
-                        <Input
-                          value={user.phone}
-                          disabled={!isEditingProfile}
-                          className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                        />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
 
-              <TabsContent value="orders">
-                <Card className="border-2 border-[#C5A572]/20">
-                  <CardHeader>
-                    <CardTitle className="text-2xl font-serif text-[#2C1810]">
-                      My Orders
-                    </CardTitle>
-                    <CardDescription className="text-[#5C4033]">
-                      View and track your orders
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {orders.map((order) => (
-                        <div
-                          key={order.id}
-                          className="flex items-start space-x-4 p-4 border-2 border-[#C5A572]/20 rounded-lg"
-                        >
-                          <img
-                            src={order.image}
-                            alt={order.name}
-                            className="h-24 w-24 rounded-md object-cover"
-                          />
-                          <div className="flex-1 space-y-2">
-                            <h4 className="font-medium text-[#2C1810]">
-                              {order.name}
-                            </h4>
-                            <p className="text-sm text-[#5C4033]">
-                              Order ID: {order.id}
-                            </p>
-                            <p className="text-sm text-[#5C4033]">
-                              Quantity: {order.quantity}
-                            </p>
-                            <div className="flex items-center justify-between">
-                              <span className="text-lg font-semibold text-[#2C1810]">
-                                {order.price}
-                              </span>
-                              <span
-                                className={`px-3 py-1 rounded-full text-xs ${
-                                  order.status === 'Delivered'
-                                    ? 'bg-green-100 text-green-800'
-                                    : order.status === 'Processing'
-                                    ? 'bg-yellow-100 text-yellow-800'
-                                    : 'bg-red-100 text-red-800'
-                                }`}
-                              >
-                                {order.status}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                    <div>
+                      <AntDropdown menu={{ items: addressMenuItems(a) }}>
+                        <Button type="text">Actions</Button>
+                      </AntDropdown>
                     </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </AntCard>
+      ),
+    },
+    {
+      key: 'payments',
+      label: (
+        <div className="flex items-center gap-2">
+          <CreditCard className="w-4 h-4" />
+          <span>Payments</span>
+        </div>
+      ),
+      children: (
+        <AntCard className="p-4">
+          <h3 className="text-lg font-medium">Payment Methods</h3>
+          <p className="text-sm text-[#5C4033]">Manage saved cards and add new payment options</p>
 
-              <TabsContent value="addresses">
-                <Card className="border-2 border-[#C5A572]/20">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl font-serif text-[#2C1810]">
-                          My Addresses
-                        </CardTitle>
-                        <CardDescription className="text-[#5C4033]">
-                          Manage your delivery addresses
-                        </CardDescription>
-                      </div>
-                      <Button
-                        onClick={() => setShowAddressForm(true)}
-                        className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add New
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {showAddressForm ? (
-                      <form onSubmit={handleAddressSubmit} className="space-y-6">
-                        <div className="grid gap-6 md:grid-cols-2">
-                          <div>
-                            <Label className="text-[#5C4033]">Full Name</Label>
-                            <Input
-                              required
-                              value={currentAddress.name}
-                              onChange={(e) =>
-                                setCurrentAddress({
-                                  ...currentAddress,
-                                  name: e.target.value,
-                                })
-                              }
-                              className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[#5C4033]">Phone</Label>
-                            <Input
-                              required
-                              value={currentAddress.phone}
-                              onChange={(e) =>
-                                setCurrentAddress({
-                                  ...currentAddress,
-                                  phone: e.target.value,
-                                })
-                              }
-                              className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <Label className="text-[#5C4033]">Address</Label>
-                          <Textarea
-                            required
-                            value={currentAddress.line1}
-                            onChange={(e) =>
-                              setCurrentAddress({
-                                ...currentAddress,
-                                line1: e.target.value,
-                              })
-                            }
-                            className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                          />
-                        </div>
-                        <div className="grid gap-6 md:grid-cols-3">
-                          <div>
-                            <Label className="text-[#5C4033]">City</Label>
-                            <Input
-                              required
-                              value={currentAddress.city}
-                              onChange={(e) =>
-                                setCurrentAddress({
-                                  ...currentAddress,
-                                  city: e.target.value,
-                                })
-                              }
-                              className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[#5C4033]">State</Label>
-                            <Input
-                              required
-                              value={currentAddress.state}
-                              onChange={(e) =>
-                                setCurrentAddress({
-                                  ...currentAddress,
-                                  state: e.target.value,
-                                })
-                              }
-                              className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[#5C4033]">PIN Code</Label>
-                            <Input
-                              required
-                              value={currentAddress.pincode}
-                              onChange={(e) =>
-                                setCurrentAddress({
-                                  ...currentAddress,
-                                  pincode: e.target.value,
-                                })
-                              }
-                              className="mt-2 border-[#C5A572] focus:border-[#D4AF37]"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex gap-4">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => {
-                              setShowAddressForm(false);
-                              setEditingAddressId(null);
-                            }}
-                            className="border-[#C5A572] text-[#2C1810] hover:bg-[#D4AF37]/10"
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            type="submit"
-                            className="bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
-                          >
-                            {editingAddressId ? 'Update' : 'Save'} Address
-                          </Button>
-                        </div>
-                      </form>
-                    ) : (
-                      <div className="space-y-4">
-                        {addresses.map((address) => (
-                          <div
-                            key={address.id}
-                            className="p-4 border-2 border-[#C5A572]/20 rounded-lg"
-                          >
-                            <div className="flex items-start justify-between">
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <h4 className="font-medium text-[#2C1810]">
-                                    {address.name}
-                                  </h4>
-                                  {address.isDefault && (
-                                    <span className="px-2 py-0.5 text-xs bg-[#D4AF37]/20 text-[#2C1810] rounded">
-                                      Default
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="mt-1 text-sm text-[#5C4033]">
-                                  {address.line1}
-                                </p>
-                                <p className="text-sm text-[#5C4033]">
-                                  {address.city}, {address.state} - {address.pincode}
-                                </p>
-                                <p className="mt-2 text-sm text-[#5C4033]">
-                                  Phone: {address.phone}
-                                </p>
-                              </div>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-[#5C4033] hover:text-[#2C1810]"
-                                  >
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem
-                                    onClick={() => handleAddressEdit(address)}
-                                  >
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                  {!address.isDefault && (
-                                    <DropdownMenuItem
-                                      onClick={() =>
-                                        handleSetDefaultAddress(address.id)
-                                      }
-                                    >
-                                      <Home className="mr-2 h-4 w-4" />
-                                      Set as Default
-                                    </DropdownMenuItem>
-                                  )}
-                                  <DropdownMenuSeparator />
-                                  <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                      <DropdownMenuItem
-                                        className="text-red-600"
-                                        onSelect={(e: { preventDefault: () => any; }) => e.preventDefault()}
-                                      >
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        Delete
-                                      </DropdownMenuItem>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                          Delete Address?
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          Are you sure you want to delete this address?
-                                          This action cannot be undone.
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction
-                                          onClick={() =>
-                                            handleAddressDelete(address.id)
-                                          }
-                                          className="bg-red-600 text-white hover:bg-red-700"
-                                        >
-                                          Delete
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
+          <div className="space-y-3 mt-4">
+            {payments.map((pm) => (
+              <div key={pm.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div>
+                  <div className="font-medium">{pm.brand} • • • • {pm.last4}</div>
+                  <div className="text-sm text-[#5C4033]">Expires {pm.expiry}</div>
+                </div>
+                <div>
+                  <Button type="text">Remove</Button>
+                </div>
+              </div>
+            ))}
 
-              <TabsContent value="payment">
-                <Card className="border-2 border-[#C5A572]/20">
-                  <CardHeader>
-                    <CardTitle className="text-2xl font-serif text-[#2C1810]">
-                      Payment Methods
-                    </CardTitle>
-                    <CardDescription className="text-[#5C4033]">
-                      Manage your payment options
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8">
-                      <p className="text-[#5C4033]">
-                        No saved payment methods yet.
-                      </p>
-                      <Button
-                        className="mt-4 bg-[#D4AF37] text-[#2C1810] hover:bg-[#C5A572]"
-                      >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add Payment Method
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+            <div className="pt-3">
+              <Button type="primary" onClick={addDummyCard} className="bg-[#D4AF37] text-[#2C1810]">Add Card</Button>
             </div>
           </div>
-        </Tabs>
+        </AntCard>
+      ),
+    },
+    {
+      key: 'wishlist',
+      label: (
+        <div className="flex items-center gap-2">
+          <Heart className="w-4 h-4" />
+          <span>Wishlist</span>
+        </div>
+      ),
+      children: (
+        <AntCard className="p-4">
+          <h3 className="text-lg font-medium">Wishlist</h3>
+          <p className="text-sm text-[#5C4033]">Items you've saved for later</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+            {wishlist.map((w) => (
+              <div key={w.id} className="p-3 border rounded-lg flex flex-col">
+                <div className="h-40 bg-gray-50 rounded-md mb-3 flex items-center justify-center overflow-hidden">
+                  {w.image ? <img src={w.image} alt={w.name} className="object-cover h-full w-full rounded-md" /> : <div className="text-sm">No Image</div>}
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium">{w.name}</div>
+                  <div className="text-sm text-[#5C4033]">{w.price}</div>
+                </div>
+                <div className="mt-3 flex gap-2">
+                  <Button className="flex-1">Add to Cart</Button>
+                  <Button type="text" onClick={() => removeFromWishlist(w.id)} className="text-red-600">Remove</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </AntCard>
+      ),
+    },
+    {
+      key: 'settings',
+      label: (
+        <div className="flex items-center gap-2">
+          <Settings className="w-4 h-4" />
+          <span>Settings</span>
+        </div>
+      ),
+      children: (
+        <AntCard className="p-4">
+          <h3 className="text-lg font-medium">Account Settings</h3>
+          <p className="text-sm text-[#5C4033]">Security and preferences</p>
+
+          <div className="space-y-3 mt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Change Password</div>
+                <div className="text-sm text-[#5C4033]">Update your account password</div>
+              </div>
+              <Button type="default">Change</Button>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Email Preferences</div>
+                <div className="text-sm text-[#5C4033]">Manage marketing and notification emails</div>
+              </div>
+              <Button type="default">Manage</Button>
+            </div>
+          </div>
+        </AntCard>
+      ),
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#FFF8E7] via-white to-white py-10 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left column - Profile Card */}
+          <div className="lg:col-span-1">
+            <AntCard className="shadow-lg rounded-2xl p-6">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="relative">
+                  <AntAvatar size={112} src={profilePreview} style={{ border: '4px solid #D4AF37' }}>
+                    {user.name.split(' ').map(n => n[0]).join('')}
+                  </AntAvatar>
+
+                  <div className="absolute right-0 bottom-0 flex space-x-2">
+                    <Button type="primary" shape="circle" onClick={handleChoosePhoto} className="bg-[#D4AF37] text-[#2C1810]">
+                      <Camera className="w-4 h-4" />
+                    </Button>
+                    <Button danger type="default" shape="circle" onClick={handleRemovePhoto}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleProfileChange} />
+
+                <div>
+                  <h3 className="font-serif text-xl text-[#2C1810]">{user.name}</h3>
+                  <p className="text-sm text-[#5C4033]">{user.email}</p>
+                  <p className="text-sm text-[#5C4033]">{user.phone}</p>
+                </div>
+
+                <div className="w-full">
+                  <div className="my-4 border-t" />
+                  <div className="flex flex-col space-y-2">
+                    <Button onClick={() => setIsEditing(prev => !prev)} type={isEditing ? 'default' : 'dashed'} className="w-full">
+                      {isEditing ? (<><Save className="mr-2 w-4 h-4" /> Save</>) : (<><Edit className="mr-2 w-4 h-4" /> Edit Profile</>)}
+                    </Button>
+                    <Button type="text" onClick={handleLogout} className="w-full justify-start text-red-600">
+                      <LogOut className="mr-2 w-4 h-4" /> Logout
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </AntCard>
+
+            <AntCard className="mt-6 shadow-md rounded-2xl p-4">
+              <div>
+                <h4 className="text-lg font-serif">Quick Actions</h4>
+                <p className="text-sm text-[#5C4033]">Common account tasks</p>
+                <div className="flex flex-col space-y-2 mt-3">
+                  <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} type="default">New Order</Button>
+                  <Button onClick={() => addDummyCard()} type="default">Add Payment</Button>
+                </div>
+              </div>
+            </AntCard>
+          </div>
+
+          {/* Right column - Tabs */}
+          <div className="lg:col-span-3">
+            <AntCard className="rounded-2xl shadow-lg">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-serif text-[#2C1810]">Account Dashboard</h2>
+                  <div className="flex items-center gap-3">
+                    <Button type="link" className="gap-2"><Heart className="w-4 h-4" /> Wishlist ({wishlist.length})</Button>
+                    <Button type="default" onClick={() => navigate('/orders')} className="gap-2"><Package className="w-4 h-4" /> View Orders</Button>
+                  </div>
+                </div>
+
+                <AntTabs defaultActiveKey="dashboard" items={tabsItems} />
+              </div>
+            </AntCard>
+          </div>
+        </div>
       </div>
     </div>
   );

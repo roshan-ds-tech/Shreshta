@@ -4,6 +4,7 @@ import { ShoppingCart, User, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../contexts/CartContext';
+import React from 'react';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -66,7 +67,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 className="text-[#F5E6D3] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10"
-                style={{cursor: "pointer"}}
+                style={{cursor: "pointer", color: "#F5E6D3"}}
               >
                 <User className="w-4 h-4 mr-2" />
                 Login
@@ -119,7 +120,9 @@ export function Navbar() {
                   <ShoppingCart className="w-5 h-5" />
                 </Link>
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-[#C5A572] text-[#F5E6D3] hover:bg-[#D4AF37]/10">
+                  <Button variant="outline" className="w-full border-[#C5A572] text-[white] hover:bg-[#D4AF37]/10"
+                  style={{cursor: "pointer", color: "white"}}
+                  >
                     Login
                   </Button>
                 </Link>
